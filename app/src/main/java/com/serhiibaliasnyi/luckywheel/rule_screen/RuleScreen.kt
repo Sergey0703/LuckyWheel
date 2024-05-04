@@ -70,7 +70,8 @@ fun RuleScreen() {
             .weight(1f)
             .fillMaxSize()){
             Image(
-                painter= painterResource(id = R.drawable.lucky_wheel_bg),
+                //painter= painterResource(id = R.drawable.lucky_wheel_bg),
+                painter= painterResource(id = R.drawable.rulette5),
                 contentDescription = "lucky wheel",
                 modifier = Modifier
                     .fillMaxSize()
