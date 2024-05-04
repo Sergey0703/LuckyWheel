@@ -1,5 +1,7 @@
 package com.serhiibaliasnyi.luckywheel.rule_screen
 
+import android.media.AudioManager
+import android.media.SoundPool
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -34,7 +36,9 @@ import com.serhiibaliasnyi.luckywheel.ui.theme.Red
 import kotlin.math.roundToInt
 
 @Composable
-fun RuleScreen() {
+fun RuleScreen(sound: SoundPool?) {
+
+
     var rotationValue by remember {
         mutableStateOf(0f)
     }
@@ -81,7 +85,9 @@ fun RuleScreen() {
         }
 
         Button(onClick = {
-                         rotationValue=(720..1080).random().toFloat()+angle
+            rotationValue=(720..1080).random().toFloat()+angle
+            sound?.play(1, 1F, 1F, 0, 0, 1F)
+
         },
             colors=ButtonDefaults.buttonColors(Red),
             modifier = Modifier
