@@ -31,14 +31,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.airbnb.lottie.LottieComposition
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieClipSpec
 import com.serhiibaliasnyi.luckywheel.R
 import com.serhiibaliasnyi.luckywheel.ui.theme.Red
 import kotlin.math.roundToInt
 
 @Composable
-fun RuleScreen(sound: SoundPool?) {
+fun RuleScreen(sound: SoundPool?, composition:LottieComposition?) {
 
-
+    var isPlayingLottie by remember {
+        mutableStateOf(false)
+    }
+    val animSpec= LottieClipSpec.Progress(
+        0f,
+        0.8f
+    )
     var rotationValue by remember {
         mutableStateOf(0f)
     }
@@ -54,12 +63,18 @@ fun RuleScreen(sound: SoundPool?) {
         ),
         finishedListener = {
              number=((360f-(it%360))/(360f/8)).roundToInt()
+             isPlayingLottie=true
+           
         }
     )
+
+
     Column(
         modifier=Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ){
+
+
         Text(modifier= Modifier
             .fillMaxWidth()
             .height(100.dp)
@@ -85,6 +100,7 @@ fun RuleScreen(sound: SoundPool?) {
         }
 
         Button(onClick = {
+            isPlayingLottie=false
             rotationValue=(720..1080).random().toFloat()+angle
             sound?.play(1, 1F, 1F, 0, 0, 1F)
 
@@ -99,4 +115,10 @@ fun RuleScreen(sound: SoundPool?) {
 
         }
     }
+    LottieAnimation(composition = composition,
+        isPlaying = isPlayingLottie,
+        speed = 1.5f,
+        iterations = 3,
+        clipSpec = animSpec
+    )
 }
