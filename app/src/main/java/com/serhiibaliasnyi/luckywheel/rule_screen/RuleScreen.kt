@@ -63,6 +63,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?) {
         ),
         finishedListener = {
              number=((360f-(it%360))/(360f/8)).roundToInt()
+             sound?.play(2, 1F, 1F, 0, 0, 1F)
              isPlayingLottie=true
            
         }
@@ -118,7 +119,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?) {
     LottieAnimation(composition = composition,
         isPlaying = isPlayingLottie,
         speed = 1.5f,
-        iterations = 3,
+        iterations = 2,
         clipSpec = animSpec
     )
 }

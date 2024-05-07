@@ -28,6 +28,7 @@ class MainActivity : ComponentActivity() {
         spb.setMaxStreams(4)
         soundPool = spb.build()
         soundPool?.load(this, R.raw.lucky_wheel, 1)
+        soundPool?.load(this, R.raw.success, 2)
         setContent {
 
             LuckyWheelTheme {
