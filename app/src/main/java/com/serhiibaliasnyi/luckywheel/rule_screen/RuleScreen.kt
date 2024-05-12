@@ -2,6 +2,7 @@ package com.serhiibaliasnyi.luckywheel.rule_screen
 
 import android.media.AudioManager
 import android.media.SoundPool
+import android.net.Uri
 import android.util.Log
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -23,7 +24,10 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -35,19 +39,103 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.media3.common.C
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
 import com.airbnb.lottie.LottieComposition
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieClipSpec
+import com.serhiibaliasnyi.luckywheel.MainActivity
 import com.serhiibaliasnyi.luckywheel.R
 import com.serhiibaliasnyi.luckywheel.ui.theme.GreenBackground
 import com.serhiibaliasnyi.luckywheel.ui.theme.GreenMain
 import com.serhiibaliasnyi.luckywheel.ui.theme.MainActionColor
 import com.serhiibaliasnyi.luckywheel.ui.theme.Red
+import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun RuleScreen(sound: SoundPool?, composition:LottieComposition?) {
+fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPlayer, playList: List<MainActivity.Music>) {
     val quantytyOfSectors:Int=8;
+
+    val list = remember {
+        mutableListOf<String>()
+    }
+
+    var currentValue by remember { mutableStateOf(0L) }
+    var isPlaying by remember { mutableStateOf(false) }
+
+    val numberOfTrack = remember {
+        mutableStateOf(-1)
+    }
+
+    val playingSongIndex = remember {
+        mutableIntStateOf(0)
+    }
+
+    LaunchedEffect(numberOfTrack.value) {
+       // Log.d("counter", "Launch1")
+        playingSongIndex.intValue = numberOfTrack.value - 1
+        //  player.seekTo(numberOfTrack.value-1, 0)
+    }
+
+    LaunchedEffect(Unit) {
+        //   Log.d("counter", "Launch0=" + player.currentMediaItemIndex.toString())
+        playList.forEach {
+            val path = "android.resource://" + "com.serhiibaliasnyi.luckywheel" + "/" + it.music
+            val mediaItem = MediaItem.fromUri(Uri.parse(path))
+            player.addMediaItem(mediaItem)
+            list.add(it.name)
+        }
+        player.prepare()
+    }
+
+   // val currentPosition by remember {
+   //     mutableLongStateOf(0)
+   // }
+
+   // val totalDuration by remember {
+   //     mutableLongStateOf(0)
+   // }
+
+
+
+    DisposableEffect(Unit) {
+        val listener = object : Player.Listener {
+            override fun onIsPlayingChanged(isPlaying_: Boolean) {
+                isPlaying = isPlaying_
+            }
+        }
+        player.addListener(listener)
+        onDispose {
+            player.removeListener(listener)
+        }
+    }
+    if (isPlaying) {
+        LaunchedEffect(Unit) {
+            while (true) {
+                currentValue = player.currentPosition
+              //  Log.d("rul", currentValue.toString())
+                if(currentValue>5000){
+                    player.pause()
+                    Log.d("rul", "pause="+currentValue.toString())
+                    currentValue =0;
+                  //  currentPosition.longValue = 0
+                //    if (player.isPlaying) {
+                //    player.seekToNextMediaItem()
+                 //   currentValue=0;
+                 //   }
+                }
+                delay(1.seconds )
+                Log.d("rul", "play="+currentValue.toString())
+                // delay(1000 )
+               // currentPosition.longValue = currentValue
+               // sliderPosition.longValue = currentPosition.longValue
+            }
+        }
+    }
 
     var isPlayingLottie by remember {
         mutableStateOf(false)
@@ -75,6 +163,24 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?) {
             Log.d("rul","it="+it.toString() +" it%360="+it%360 +" (360f-(it%360))="+(360f-(it%360))+" number="+ number.toString())
           //   sound?.play(2, 1F, 1F, 0, 0, 1F)
           //   isPlayingLottie=true
+           // firstLaunch.value = false;
+            if (player.isPlaying) {
+                player.pause()
+            } else {
+
+               // if (player.currentMediaItemIndex != numberOfTrack.value - 1) {
+              //  if (numberOfTrack.value == 0) {
+              //          numberOfTrack.value = 1
+              //    player.seekTo(0, C.TIME_UNSET);
+              //     } else {
+              //    player.seekTo(numberOfTrack.value - 1, C.TIME_UNSET);
+                // }
+               // }
+                player.seekTo(numberOfTrack.value, C.TIME_UNSET);
+                player.setPlayWhenReady(true);
+                player.play()
+
+            }
            
         }
     )
@@ -164,6 +270,8 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?) {
             rotationValue=((0..360).random().toFloat()+720)+angle
             Log.d("rul", "angle="+(angle%360).toString() +" rotationValue "+rotationValue.toString())
             sound?.play(1, 1F, 1F, 0, 0, 1F)
+
+            numberOfTrack.value =numberOfTrack.value+1
 
         },
             colors=ButtonDefaults.buttonColors(GreenMain),
