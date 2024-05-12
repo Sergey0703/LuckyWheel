@@ -2,9 +2,11 @@ package com.serhiibaliasnyi.luckywheel.rule_screen
 
 import android.media.AudioManager
 import android.media.SoundPool
+import android.util.Log
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +19,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,11 +39,15 @@ import com.airbnb.lottie.LottieComposition
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieClipSpec
 import com.serhiibaliasnyi.luckywheel.R
+import com.serhiibaliasnyi.luckywheel.ui.theme.GreenBackground
+import com.serhiibaliasnyi.luckywheel.ui.theme.GreenMain
+import com.serhiibaliasnyi.luckywheel.ui.theme.MainActionColor
 import com.serhiibaliasnyi.luckywheel.ui.theme.Red
 import kotlin.math.roundToInt
 
 @Composable
 fun RuleScreen(sound: SoundPool?, composition:LottieComposition?) {
+    val quantytyOfSectors:Int=8;
 
     var isPlayingLottie by remember {
         mutableStateOf(false)
@@ -62,9 +70,11 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?) {
             easing = LinearOutSlowInEasing
         ),
         finishedListener = {
-             number=((360f-(it%360))/(360f/8)).roundToInt()
-             sound?.play(2, 1F, 1F, 0, 0, 1F)
-             isPlayingLottie=true
+             number=((360f-(it%360))/(360f/quantytyOfSectors)).toInt()+1
+           //  number = ((it + (360 * 2)) / (360 /quantytyOfSectors)).roundToInt() + 1
+            Log.d("rul","it="+it.toString() +" it%360="+it%360 +" (360f-(it%360))="+(360f-(it%360))+" number="+ number.toString())
+          //   sound?.play(2, 1F, 1F, 0, 0, 1F)
+          //   isPlayingLottie=true
            
         }
     )
@@ -99,20 +109,73 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?) {
                     .rotate(angle)
             )
         }
+//========================================================
+        OutlinedButton(border= BorderStroke(2.dp, White),
+            onClick = {
+            sound?.play(1, 1F, 1F, 0, 0, 1F)
+        },
+            colors=ButtonDefaults.buttonColors(GreenMain),
 
-        Button(onClick = {
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+        ){
+            Text(text="Start",
+                color= White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 35.sp
+            )
+        }
+
+        OutlinedButton(border= BorderStroke(2.dp, White),
+        onClick = {
+            sound?.play(1, 1F, 1F, 0, 0, 1F)
+        },
+            colors=ButtonDefaults.buttonColors(GreenBackground),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+        ){
+            Text(text="Start",
+                color= White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 35.sp
+            )
+        }
+        OutlinedButton(border= BorderStroke(2.dp, White),
+            onClick = {
+            sound?.play(1, 1F, 1F, 0, 0, 1F)
+        },
+            colors=ButtonDefaults.buttonColors(GreenMain),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+        ){
+            Text(text="Start",
+                color= White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 35.sp
+            )
+        }
+
+        OutlinedButton(border= BorderStroke(2.dp, White),
+            onClick = {
             isPlayingLottie=false
-            rotationValue=(720..1080).random().toFloat()+angle
+            rotationValue=((0..360).random().toFloat()+720)+angle
+            Log.d("rul", "angle="+(angle%360).toString() +" rotationValue "+rotationValue.toString())
             sound?.play(1, 1F, 1F, 0, 0, 1F)
 
         },
-            colors=ButtonDefaults.buttonColors(Red),
+            colors=ButtonDefaults.buttonColors(GreenMain),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp)
             ){
             Text(text="Start",
-                color= White)
+                color= MainActionColor,
+                fontWeight = FontWeight.Bold,
+                fontSize = 35.sp
+                )
 
         }
     }
