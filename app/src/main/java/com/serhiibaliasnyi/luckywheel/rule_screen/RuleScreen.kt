@@ -80,6 +80,12 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
     var buttonText1:String by remember {
         mutableStateOf("")
     }
+    var buttonText2:String by remember {
+        mutableStateOf("")
+    }
+    var buttonText3:String by remember {
+        mutableStateOf("")
+    }
     var currentValue by remember { mutableStateOf(0L) }
     var isPlaying by remember { mutableStateOf(false) }
 
@@ -146,7 +152,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             while (true) {
                 currentValue = player.currentPosition
               //  Log.d("rul", currentValue.toString())
-                if(currentValue>5000){
+                if(currentValue>10000){
                     player.pause()
                     Log.d("rul", "pause="+currentValue.toString())
                     currentValue =0;
@@ -221,6 +227,9 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
               //  numbers.removeAt(1)
                // buttonText1=list.get(number-1)
                 buttonText1=song.name
+
+                buttonText2=song.name
+                buttonText3=song.name
                 player.seekTo(number-1, C.TIME_UNSET);
                 player.setPlayWhenReady(true);
                 player.play()
@@ -287,7 +296,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 .fillMaxWidth()
                 .padding(10.dp)
         ){
-            Text(text="Start",
+            Text(text=buttonText2,
                 color= White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 35.sp
@@ -302,7 +311,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 .fillMaxWidth()
                 .padding(10.dp)
         ){
-            Text(text="Start",
+            Text(text=buttonText3,
                 color= White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 35.sp
@@ -312,7 +321,9 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
         OutlinedButton(border= BorderStroke(2.dp, White),
             onClick = {
             buttonText1=""
-                initSongs(playListShuffle,quantytyOfSectors,playList,player )
+            buttonText2=""
+            buttonText3=""
+            initSongs(playListShuffle,quantytyOfSectors,playList,player )
             //Log.d("rul","playListShuffleButton="+playListShuffle)
             isPlayingLottie=false
             rotationValue=((0..360).random().toFloat()+720)+angle

@@ -161,167 +161,199 @@ class MainActivity : ComponentActivity() {
                 name = "Row Row Row Your Boat",
                 cover = "assets.image18",
                 music = R.raw.track18
-            ), /*
+            ),
             Music(
+                id=19,
                 name = "Old King Cole",
                 cover = "assets.image19",
                 music = R.raw.track19
             ),
             Music(
+                id=20,
                 name = "1 2 3 4 5 Once I Caught a Fish Alive",
                 cover = "assets.image20",
                 music = R.raw.track20
             ),
             Music(
+                id=21,
                 name = "Hickory Dickory Dock",
                 cover = "assets.image21",
                 music = R.raw.track21
             ),
             Music(
+                id=22,
                 name = "Bobby Shaftoe",
                 cover = "assets.image22",
                 music = R.raw.track22
             ),
             Music(
+                id=23,
                 name = "Ten in the Bed",
                 cover = "assets.image23",
                 music = R.raw.track23
             ),
             Music(
+                id=24,
                 name = "Little Miss Muffet",
                 cover = "assets.image24",
                 music = R.raw.track24
             ),
             Music(
+                id=25,
                 name = "Humpty Dumpty",
                 cover = "assets.image25",
                 music = R.raw.track25
             ),
             Music(
+                id=26,
                 name = "This Old Man",
                 cover = "assets.image26",
                 music = R.raw.track26
             ),
             Music(
+                id=27,
                 name = "Five Little Speckled Frogs",
                 cover = "assets.image27",
                 music = R.raw.track27
             ),
             Music(
+                id=28,
                 name = "Baa Baa Black Sheep",
                 cover = "assets.image28",
                 music = R.raw.track28
             ),
             Music(
+                id=29,
                 name = "Ring a Ring O' Roses",
                 cover = "assets.image29",
                 music = R.raw.track29
             ),
             Music(
+                id=30,
                 name = "With My Foot I Tap Tap Tap",
                 cover = "assets.image30",
                 music = R.raw.track30
             ),
             Music(
+                id=31,
                 name = "Jack and Jill",
                 cover = "assets.image31",
                 music = R.raw.track31
             ),
             Music(
+                id=32,
                 name = "The Alphabet Song",
                 cover = "assets.image32",
                 music = R.raw.track32
             ),
             Music(
+                id=33,
                 name = "Polly Put the Kettle On",
                 cover = "assets.image33",
                 music = R.raw.track33
             ),
             Music(
+                id=34,
                 name = "She'll Be Coming Round the Mountain",
                 cover = "assets.image34",
                 music = R.raw.track34
             ),
             Music(
+                id=35,
                 name = "One Finger One Thumb",
                 cover = "assets.image35",
                 music = R.raw.track35
             ),
             Music(
+                id=36,
                 name = "One Man Went to Mow",
                 cover = "assets.image36",
                 music = R.raw.track36
             ),
             Music(
+                id=37,
                 name = "London Bridge Is Falling Down",
                 cover = "assets.image37",
                 music = R.raw.track37
             ),
             Music(
+                id=38,
                 name = "The Muffin Man",
                 cover = "assets.image38",
                 music = R.raw.track38
             ),
             Music(
+                id=39,
                 name = "Five Little Ducks",
                 cover = "assets.image39",
                 music = R.raw.track39
             ),
             Music(
+                id=40,
                 name = "Pop! Goes the Weasel",
                 cover = "assets.image40",
                 music = R.raw.track40
             ),
             Music(
+                id=41,
                 name = "Here We Go Looby Loo",
                 cover = "assets.image41",
                 music = R.raw.track41
             ),
             Music(
+                id=42,
                 name = "Sing a Song of Sixpence",
                 cover = "assets.image42",
                 music = R.raw.track42
             ),
             Music(
+                id=43,
                 name = "Three Blind Mice",
                 cover = "assets.image43",
                 music = R.raw.track43
             ),
             Music(
+                id=44,
                 name = "The Grand Old Duke of York",
                 cover = "assets.image44",
                 music = R.raw.track44
             ),
             Music(
+                id=45,
                 name = "One Potato Two Potato",
                 cover = "assets.image45",
                 music = R.raw.track45
             ),
             Music(
+                id=46,
                 name = "Miss Polly Had a Dolly",
                 cover = "assets.image46",
                 music = R.raw.track46
             ),
             Music(
+                id=47,
                 name = "Open Shut Them",
                 cover = "assets.image47",
                 music = R.raw.track47
             ),
             Music(
+                id=48,
                 name = "Here We Go Round the Mulberry Bush",
                 cover = "assets.image48",
                 music = R.raw.track48
             ),
             Music(
+                id=49,
                 name = "Drunken Sailor",
                 cover = "assets.image49",
                 music = R.raw.track49
             ),
             Music(
+                id=50,
                 name = "Mary Had a Little Lamb",
                 cover = "assets.image50",
                 music = R.raw.track50
-            ) */
+            )
         )
     }
 
