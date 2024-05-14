@@ -28,9 +28,12 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
@@ -53,17 +56,30 @@ import com.serhiibaliasnyi.luckywheel.ui.theme.GreenMain
 import com.serhiibaliasnyi.luckywheel.ui.theme.MainActionColor
 import com.serhiibaliasnyi.luckywheel.ui.theme.Red
 import kotlinx.coroutines.delay
+import java.util.Collections
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPlayer, playList: List<MainActivity.Music>) {
-    val quantytyOfSectors:Int=8;
+    val quantytyOfSectors:Int=8
 
+
+    var playListShuffle:MutableList<MainActivity.Music> = remember{
+        mutableStateListOf<MainActivity.Music>()
+       // Log.d("rul", "playListShuffle remember ")
+    }
+    //val data = remember {
+    //    mutableStateListOf<Int>()
+    //}
+    Log.d("rul", "Recomposition "+playListShuffle.toList())
     val list = remember {
         mutableListOf<String>()
     }
-
+    Log.d("rul", "RecompositionList "+list)
+    var buttonText1:String by remember {
+        mutableStateOf("")
+    }
     var currentValue by remember { mutableStateOf(0L) }
     var isPlaying by remember { mutableStateOf(false) }
 
@@ -71,24 +87,38 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
         mutableStateOf(-1)
     }
 
-    val playingSongIndex = remember {
-        mutableIntStateOf(0)
-    }
+   // val playingSongIndex = remember {
+   //     mutableIntStateOf(0)
+   // }
 
     LaunchedEffect(numberOfTrack.value) {
        // Log.d("counter", "Launch1")
-        playingSongIndex.intValue = numberOfTrack.value - 1
+   //     playingSongIndex.intValue = numberOfTrack.value - 1
         //  player.seekTo(numberOfTrack.value-1, 0)
     }
 
     LaunchedEffect(Unit) {
+       // playListShuffle = getRandomElements(quantytyOfSectors,playList)
+        playListShuffle.clear()
+        getRandomElements(quantytyOfSectors,playList).forEach {
+           playListShuffle.add(it)
+       }
+       // playListShuffle = playList as SnapshotStateList<MainActivity.Music>
+        //playListShuffle = playList.toMutableStateList()
+      //  playListShuffle.add(playList[0])
+
+        Log.d("rul","Launch="+ playListShuffle.toList())
         //   Log.d("counter", "Launch0=" + player.currentMediaItemIndex.toString())
-        playList.forEach {
+        //playList.forEach {
+        playListShuffle.forEach {
             val path = "android.resource://" + "com.serhiibaliasnyi.luckywheel" + "/" + it.music
             val mediaItem = MediaItem.fromUri(Uri.parse(path))
             player.addMediaItem(mediaItem)
             list.add(it.name)
+
         }
+        Log.d("rul","Launch2="+ playListShuffle.toList())
+        Log.d("rul", "Launch2s="+list)
         player.prepare()
     }
 
@@ -159,8 +189,18 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
         ),
         finishedListener = {
              number=((360f-(it%360))/(360f/quantytyOfSectors)).toInt()+1
+             Log.d("rul","Before song="+ playListShuffle.toList().toString())
+             var song:MainActivity.Music=playListShuffle.get(number-1)
+          //   var newSongsUtil:MutableList<MainActivity.Music> = playListShuffle
+          //       newSongsUtil.removeAt(number-1)
+           //  Log.d("rul","Str="+ newSongsUtil.removeAt(number-1))
+           //  Log.d("rul","After="+ newSongsUtil)
+           //     newSongsUtil=getRandomElements(2,newSongsUtil)
+
+
+
            //  number = ((it + (360 * 2)) / (360 /quantytyOfSectors)).roundToInt() + 1
-            Log.d("rul","it="+it.toString() +" it%360="+it%360 +" (360f-(it%360))="+(360f-(it%360))+" number="+ number.toString())
+           // Log.d("rul","it="+it.toString() +" it%360="+it%360 +" (360f-(it%360))="+(360f-(it%360))+" number="+ number.toString())
           //   sound?.play(2, 1F, 1F, 0, 0, 1F)
           //   isPlayingLottie=true
            // firstLaunch.value = false;
@@ -176,7 +216,13 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
               //    player.seekTo(numberOfTrack.value - 1, C.TIME_UNSET);
                 // }
                // }
-                player.seekTo(numberOfTrack.value, C.TIME_UNSET);
+
+
+               // var newSongs=(0..quantytyOfSectors-1).random()
+              //  numbers.removeAt(1)
+               // buttonText1=list.get(number-1)
+                buttonText1=song.name
+                player.seekTo(number-1, C.TIME_UNSET);
                 player.setPlayWhenReady(true);
                 player.play()
 
@@ -226,7 +272,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 .fillMaxWidth()
                 .padding(10.dp)
         ){
-            Text(text="Start",
+            Text(text=buttonText1,
                 color= White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 35.sp
@@ -266,12 +312,14 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
 
         OutlinedButton(border= BorderStroke(2.dp, White),
             onClick = {
+            buttonText1=""
+            //Log.d("rul","playListShuffleButton="+playListShuffle)
             isPlayingLottie=false
             rotationValue=((0..360).random().toFloat()+720)+angle
-            Log.d("rul", "angle="+(angle%360).toString() +" rotationValue "+rotationValue.toString())
+         //   Log.d("rul", "angle="+(angle%360).toString() +" rotationValue "+rotationValue.toString())
             sound?.play(1, 1F, 1F, 0, 0, 1F)
 
-            numberOfTrack.value =numberOfTrack.value+1
+            //numberOfTrack.value =numberOfTrack.value+1
 
         },
             colors=ButtonDefaults.buttonColors(GreenMain),
@@ -294,3 +342,59 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
         clipSpec = animSpec
     )
 }
+
+fun  getRandomElements(amount:Int,  list:List<MainActivity.Music> ): MutableList<MainActivity.Music> {
+     var returnList:ArrayList<MainActivity.Music> = ArrayList(list);
+     var squeezeList:MutableList<MainActivity.Music> =list.toMutableStateList()
+    Log.d("rul","In1="+squeezeList.toList())
+       Collections.shuffle(returnList); // тут делаем рандом
+    if (returnList.size > amount) { // отрезаем не нужную часть
+        Log.d("rul", "delSize")
+        // тут отрезаем не нужную часть
+        //  list.subList(returnList.size - amount, returnList.size).clear()
+       // list.subList(0, returnList.size)
+        squeezeList= returnList.subList(0,amount)
+    }
+   // Log.d("rul","In="+list)
+    Log.d("rul","In2="+squeezeList.toList())
+        return squeezeList;
+    }
+
+fun initSongs(playListShuffle:MutableList<MainActivity.Music>,quantytyOfSectors:Int,playList:List<MainActivity.Music>,player:ExoPlayer ){
+    // playListShuffle = getRandomElements(quantytyOfSectors,playList)
+    playListShuffle.clear()
+    getRandomElements(quantytyOfSectors,playList).forEach {
+        playListShuffle.add(it)
+    }
+    // playListShuffle = playList as SnapshotStateList<MainActivity.Music>
+    //playListShuffle = playList.toMutableStateList()
+    //  playListShuffle.add(playList[0])
+
+    Log.d("rul","Launch="+ playListShuffle.toList())
+    //   Log.d("counter", "Launch0=" + player.currentMediaItemIndex.toString())
+    //playList.forEach {
+    playListShuffle.forEach {
+        val path = "android.resource://" + "com.serhiibaliasnyi.luckywheel" + "/" + it.music
+        val mediaItem = MediaItem.fromUri(Uri.parse(path))
+        player.addMediaItem(mediaItem)
+        //list.add(it.name)
+
+    }
+    Log.d("rul","Launch2="+ playListShuffle.toList())
+    //Log.d("rul", "Launch2s="+list)
+    player.prepare()
+}
+//fun  getRandomElementsString(amount:Int,  list:MutableList<String> ):MutableList<String> {
+//    var returnList:ArrayList<String> = ArrayList(list);
+//    var squeezeList:MutableList<String> =list
+//
+//    Collections.shuffle(returnList); // тут делаем рандом
+//    if (returnList.size > amount) { // отрезаем не нужную часть
+//        Log.d("rul", "delString")
+//        // тут отрезаем не нужную часть
+//        //  list.subList(returnList.size - amount, returnList.size).clear()
+//        // list.subList(0, returnList.size)
+//        squeezeList= returnList.subList(0,amount)
+//    }
+//    return squeezeList;
+//}

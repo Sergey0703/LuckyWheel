@@ -55,91 +55,109 @@ class MainActivity : ComponentActivity() {
     private fun getPlayList(): List<Music> {
         return listOf(
             Music(
+                id=1,
                 name = "Incy Wincy Spider",
                 cover = "assets.image1",
                 music = R.raw.track1
             ),
             Music(
+                id=2,
                 name = "Head Shoulders Knees and Toes",
                 cover = "assets.image2",
                 music = R.raw.track2
             ),
             Music(
+                id=3,
                 name = "Twinkle Twinkle Little Star",
                 cover = "assets.image3",
                 music = R.raw.track3
             ),
             Music(
+                id=4,
                 name = "Jelly on a Plate",
                 cover = "assets.image4",
                 music = R.raw.track4
             ),
             Music(
+                id=5,
                 name = "Sleeping Bunnies",
                 cover = "assets.image5",
                 music = R.raw.track5
             ),
             Music(
+                id=6,
                 name = "Wind the Bobbin Up",
                 cover = "assets.image6",
                 music = R.raw.track6
             ),
             Music(
+                id=7,
                 name = "If You\'re Happy and You Know It",
                 cover = "assets.image7",
                 music = R.raw.track7
             ),
             Music(
+                id=8,
                 name = "The Wheels on the Bus",
                 cover = "assets.image8",
                 music = R.raw.track8
             ),
             Music(
+                id=9,
                 name = "Pat a Cake Pat a Cake",
                 cover = "assets.image9",
                 music = R.raw.track9
             ),
             Music(
+                id=10,
                 name = "Five Little Monkeys",
                 cover = "assets.image10",
                 music = R.raw.track10
             ),
             Music(
+                id=11,
                 name = "I'm a Little Teapot",
                 cover = "assets.image11",
                 music = R.raw.track11
             ),
             Music(
+                id=12,
                 name = "Hey Diddle Diddle",
                 cover = "assets.image12",
                 music = R.raw.track12
             ),
             Music(
+                id=13,
                 name = "One Two Buckle My Shoe",
                 cover = "assets.image13",
                 music = R.raw.track13
             ),
             Music(
+                id=14,
                 name = "Old MacDonald Had a Farm",
                 cover = "assets.image14",
                 music = R.raw.track14
             ),
             Music(
+                id=15,
                 name = "This Is the Way the Ladies Ride",
                 cover = "assets.image15",
                 music = R.raw.track15
             ),
             Music(
+                id=16,
                 name = "Teddy Bear's Picnic",
                 cover = "assets.image16",
                 music = R.raw.track16
             ),
             Music(
+                id=17,
                 name = "The Animals Went in Two by Two",
                 cover = "assets.image17",
                 music = R.raw.track17
             ),
             Music(
+                id=18,
                 name = "Row Row Row Your Boat",
                 cover = "assets.image18",
                 music = R.raw.track18
@@ -311,6 +329,7 @@ class MainActivity : ComponentActivity() {
      * Data class to represent a music in the list
      */
     data class Music(
+        val id: Int,
         val name: String,
         val music: Int,
         val cover: String,
