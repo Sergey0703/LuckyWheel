@@ -98,18 +98,15 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
     }
 
     LaunchedEffect(Unit) {
-       // playListShuffle = getRandomElements(quantytyOfSectors,playList)
+      //   initSongs(playListShuffle,quantytyOfSectors,playList,player )
+    /*
         playListShuffle.clear()
         getRandomElements(quantytyOfSectors,playList).forEach {
            playListShuffle.add(it)
        }
-       // playListShuffle = playList as SnapshotStateList<MainActivity.Music>
-        //playListShuffle = playList.toMutableStateList()
-      //  playListShuffle.add(playList[0])
 
         Log.d("rul","Launch="+ playListShuffle.toList())
-        //   Log.d("counter", "Launch0=" + player.currentMediaItemIndex.toString())
-        //playList.forEach {
+
         playListShuffle.forEach {
             val path = "android.resource://" + "com.serhiibaliasnyi.luckywheel" + "/" + it.music
             val mediaItem = MediaItem.fromUri(Uri.parse(path))
@@ -120,6 +117,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
         Log.d("rul","Launch2="+ playListShuffle.toList())
         Log.d("rul", "Launch2s="+list)
         player.prepare()
+        */
     }
 
    // val currentPosition by remember {
@@ -313,6 +311,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
         OutlinedButton(border= BorderStroke(2.dp, White),
             onClick = {
             buttonText1=""
+                initSongs(playListShuffle,quantytyOfSectors,playList,player )
             //Log.d("rul","playListShuffleButton="+playListShuffle)
             isPlayingLottie=false
             rotationValue=((0..360).random().toFloat()+720)+angle
