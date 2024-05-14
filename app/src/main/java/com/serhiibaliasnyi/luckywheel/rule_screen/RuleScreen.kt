@@ -189,6 +189,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
              number=((360f-(it%360))/(360f/quantytyOfSectors)).toInt()+1
              Log.d("rul","Before song="+ playListShuffle.toList().toString())
              var song:MainActivity.Music=playListShuffle.get(number-1)
+             Log.d("rul","Song="+ song.name)
           //   var newSongsUtil:MutableList<MainActivity.Music> = playListShuffle
           //       newSongsUtil.removeAt(number-1)
            //  Log.d("rul","Str="+ newSongsUtil.removeAt(number-1))
@@ -372,6 +373,7 @@ fun initSongs(playListShuffle:MutableList<MainActivity.Music>,quantytyOfSectors:
     Log.d("rul","Launch="+ playListShuffle.toList())
     //   Log.d("counter", "Launch0=" + player.currentMediaItemIndex.toString())
     //playList.forEach {
+    player.clearMediaItems()
     playListShuffle.forEach {
         val path = "android.resource://" + "com.serhiibaliasnyi.luckywheel" + "/" + it.music
         val mediaItem = MediaItem.fromUri(Uri.parse(path))
