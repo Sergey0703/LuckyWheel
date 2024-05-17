@@ -9,6 +9,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,8 +18,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
@@ -35,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
@@ -42,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.media3.common.C
@@ -65,8 +70,16 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPlayer, playList: List<MainActivity.Music>) {
     val quantytyOfSectors:Int=8
+    val musicDurationMs=10000;
     val alphaDisabled=0.5f
+    val strokeWidth=3.dp;
 
+    var visibleCount by remember{
+        mutableStateOf(1f)
+    }
+    var visibleWinImage by remember{
+        mutableStateOf(0f)
+    }
     var alphaStartButton:Float by remember {
          mutableStateOf(1f)
      }
@@ -100,11 +113,23 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
     var buttonText1:String by remember {
         mutableStateOf("")
     }
+
+
     var buttonText2:String by remember {
         mutableStateOf("")
     }
     var buttonText3:String by remember {
         mutableStateOf("")
+    }
+
+    var borderColour1:Int by remember {
+        mutableStateOf(0)
+    }
+    var borderColour2:Int by remember {
+        mutableStateOf(0)
+    }
+    var borderColour3:Int by remember {
+        mutableStateOf(0)
     }
     var buttonTextStart:String by remember {
         mutableStateOf("Start")
@@ -183,7 +208,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             while (true) {
                 currentValue = player.currentPosition
               //  Log.d("rul", currentValue.toString())
-                if(currentValue>10000){
+                if(currentValue>musicDurationMs){
                     player.pause()
                     Log.d("rul", "pause="+currentValue.toString())
                     currentValue =0;
@@ -192,6 +217,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                     buttonTextStart="Start"
                     alphaStartButton=1f
                     alphaButtons=alphaDisabled
+                    if(winCount>0) winCount--
                   //  currentPosition.longValue = 0
                 //    if (player.isPlaying) {
                 //    player.seekToNextMediaItem()
@@ -285,6 +311,8 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
         }
     )
     if(winCount==5){
+        visibleCount=0f
+        visibleWinImage=1f
         isPlayingLottie=true
         winCount=0
         sound?.play(2, 1F, 1F, 0, 0, 1F)
@@ -293,20 +321,43 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
 
     Column(
         modifier=Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally
     ){
 
+        Box( modifier = Modifier,
+            contentAlignment = Alignment.Center,
 
-        Text(modifier= Modifier
-            .fillMaxWidth()
-            .height(100.dp)
-            .wrapContentWidth()
-            .wrapContentHeight(),
-            text=winCount.toString(),
-            fontWeight = FontWeight.Bold,
-            fontSize = 35.sp,
-            color= Color.White
+        ) {
+            Image(
+                alignment = Alignment.Center,
+                painter= painterResource(id = R.drawable.crown),
+                contentDescription = "crown",
+                modifier = Modifier
+                    .padding(0.dp, 20.dp, 0.dp, 0.dp)
+                    .width(100.dp)
+                    .height(100.dp)
+                    .alpha(visibleWinImage)
+
             )
+
+            Text(
+                modifier = Modifier
+                    //.fillMaxWidth()
+                    .height(100.dp)
+                    .padding(0.dp, 20.dp, 0.dp, 0.dp)
+                   // .wrapContentWidth()
+                   // .wrapContentHeight()
+
+                    .alpha(visibleCount),
+                textAlign = TextAlign.Center,
+                text = winCount.toString(),
+                fontWeight = FontWeight.Bold,
+                fontSize = 35.sp,
+                color = Color.White
+            )
+
+        }
         Box(modifier= Modifier
             .weight(1f)
             .fillMaxSize()){
@@ -321,7 +372,12 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             )
         }
 //========================================================
-        OutlinedButton(border= BorderStroke(2.dp, White),
+        OutlinedButton(border= BorderStroke(strokeWidth,
+            if (borderColour1==0){ White}
+            else if(borderColour1==1) {
+                MainActionColor}
+            else{Color.Red}
+        ),
 
             onClick = {
            // Log.d("rul", "listUtil="+listUtilSongs.toList().toString())
@@ -334,6 +390,10 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             alphaButtons=alphaDisabled
             if(songId==listUtilSongs.get(0).id){
                 winCount++;
+                borderColour1=1
+            }else{
+                if(winCount>0) winCount--
+                borderColour1=2
             }
 
            },
@@ -344,6 +404,11 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 .fillMaxWidth()
                 .padding(10.dp)
                 .alpha(alphaButtons)
+                //.border(
+                //    width = 1.dp,
+                //    color = if (true) Color.Red else Color.Gray,
+                  //  shape = RoundedCornerShape(16.dp)
+               // )
         ){
             Text(text=buttonText1,
                 color= White,
@@ -352,7 +417,11 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             )
         }
 
-        OutlinedButton(border= BorderStroke(2.dp, White),
+        OutlinedButton(border= BorderStroke(strokeWidth,
+            if (borderColour2==0){ White}
+            else if(borderColour2==1) {
+            MainActionColor}
+            else{Color.Red}),
         onClick = {
             player.pause()
             currentValue =0;
@@ -363,11 +432,15 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             alphaButtons=alphaDisabled
             if(songId==listUtilSongs.get(1).id){
                 winCount++;
+                borderColour2=1
+            }else{
+                if(winCount>0) winCount--
+                borderColour2=2
             }
 
         },
             enabled = isButtonsEnabled,
-            colors=ButtonDefaults.buttonColors(GreenBackground),
+            colors=ButtonDefaults.buttonColors(GreenMain),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp)
@@ -379,7 +452,11 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 fontSize = 35.sp
             )
         }
-        OutlinedButton(border= BorderStroke(2.dp, White),
+        OutlinedButton(border= BorderStroke(strokeWidth,
+            if (borderColour3==0){ White}
+            else if(borderColour3==1) {
+                MainActionColor}
+            else{Color.Red}),
             onClick = {
                 player.pause()
                 currentValue =0;
@@ -390,6 +467,10 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 alphaButtons=alphaDisabled
                 if(songId==listUtilSongs.get(2).id){
                     winCount++;
+                    borderColour3=1
+                }else{
+                    if(winCount>0) winCount--
+                    borderColour3=2
                 }
 
         },
@@ -407,9 +488,11 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             )
         }
 
-        OutlinedButton(border= BorderStroke(2.dp, White),
+        OutlinedButton(border= BorderStroke(strokeWidth, White),
 
             onClick = {
+            visibleCount=1f
+            visibleWinImage=0f
             buttonText1=""
             buttonText2=""
             buttonText3=""
@@ -419,6 +502,9 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             alphaButtons=alphaDisabled
             isButtonStartEnabled=false
             songId=-1
+            borderColour1=0
+            borderColour2=0
+            borderColour3=0
             initSongs(playListShuffle,quantytyOfSectors,playList,player )
             //Log.d("rul","playListShuffleButton="+playListShuffle)
             isPlayingLottie=false
