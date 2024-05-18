@@ -35,6 +35,8 @@ class MainActivity : ComponentActivity() {
         soundPool = spb.build()
         soundPool?.load(this, R.raw.lucky_wheel, 1)
         soundPool?.load(this, R.raw.success, 2)
+        soundPool?.load(this, R.raw.coin, 3)
+        soundPool?.load(this, R.raw.drop, 4)
         setContent {
 
             LuckyWheelTheme {

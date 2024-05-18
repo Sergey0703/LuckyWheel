@@ -14,6 +14,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -62,6 +63,7 @@ import com.serhiibaliasnyi.luckywheel.ui.theme.GreenBackground
 import com.serhiibaliasnyi.luckywheel.ui.theme.GreenMain
 import com.serhiibaliasnyi.luckywheel.ui.theme.MainActionColor
 import com.serhiibaliasnyi.luckywheel.ui.theme.Red
+import com.serhiibaliasnyi.luckywheel.ui.theme.irishGroverFontFamily
 import kotlinx.coroutines.delay
 import java.util.Collections
 import kotlin.math.roundToInt
@@ -71,8 +73,9 @@ import kotlin.time.Duration.Companion.seconds
 fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPlayer, playList: List<MainActivity.Music>) {
     val quantytyOfSectors:Int=8
     val musicDurationMs=10000;
-    val alphaDisabled=0.5f
+    val alphaDisabled=0.6f
     val strokeWidth=3.dp;
+    val volumeCoin=0.5f
 
     var visibleCount by remember{
         mutableStateOf(1f)
@@ -218,6 +221,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                     alphaStartButton=1f
                     alphaButtons=alphaDisabled
                     if(winCount>0) winCount--
+                    sound?.play(4, volumeCoin, volumeCoin, 0, 0, 1F)
                   //  currentPosition.longValue = 0
                 //    if (player.isPlaying) {
                 //    player.seekToNextMediaItem()
@@ -257,6 +261,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
         ),
         finishedListener = {
              number=((360f-(it%360))/(360f/quantytyOfSectors)).toInt()+1
+             if(number>quantytyOfSectors) number=quantytyOfSectors
              Log.d("rul","Before song="+ playListShuffle.toList().toString())
 
              var song:MainActivity.Music=playListShuffle.get(number-1)
@@ -335,13 +340,31 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 contentDescription = "crown",
                 modifier = Modifier
                     .padding(0.dp, 20.dp, 0.dp, 0.dp)
-                    .width(100.dp)
-                    .height(100.dp)
+                    .width(120.dp)
+                    .height(120.dp)
                     .alpha(visibleWinImage)
 
             )
 
-            Text(
+            Row(modifier = Modifier,
+                horizontalArrangement = Arrangement.spacedBy(-30.dp)
+                //.width(200.dp)
+            ) {
+                for(x in 1.. winCount) {
+                    Image(
+                        alignment = Alignment.Center,
+                        painter = painterResource(id = R.drawable.coin3),
+                        contentDescription = "coin",
+                        modifier = Modifier
+                            .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                            .width(70.dp)
+                            .height(70.dp)
+                            .alpha(1f)
+
+                    )
+                }
+            }
+          /*  Text(
                 modifier = Modifier
                     //.fillMaxWidth()
                     .height(100.dp)
@@ -356,7 +379,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 fontSize = 35.sp,
                 color = Color.White
             )
-
+         */
         }
         Box(modifier= Modifier
             .weight(1f)
@@ -391,18 +414,21 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             if(songId==listUtilSongs.get(0).id){
                 winCount++;
                 borderColour1=1
+                sound?.play(3, volumeCoin, volumeCoin, 0, 0, 1F)
             }else{
                 if(winCount>0) winCount--
                 borderColour1=2
+                sound?.play(4, volumeCoin, volumeCoin, 0, 0, 1F)
             }
 
            },
             enabled = isButtonsEnabled,
+            shape = RoundedCornerShape(20.dp),
             colors=ButtonDefaults.buttonColors(GreenMain),
 
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
+                .padding(5.dp, 10.dp)
                 .alpha(alphaButtons)
                 //.border(
                 //    width = 1.dp,
@@ -410,10 +436,25 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                   //  shape = RoundedCornerShape(16.dp)
                // )
         ){
+            Image(
+                alignment = Alignment.Center,
+
+                painter = painterResource(id = R.drawable.coin3),
+                contentDescription = "coin",
+                modifier = Modifier
+                    .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                    .width(50.dp)
+                    .height(50.dp)
+                    .alpha(1f)
+
+            )
             Text(text=buttonText1,
+                textAlign = TextAlign.Center,
+                fontFamily = irishGroverFontFamily,
                 color= White,
                 fontWeight = FontWeight.Bold,
-                fontSize = 35.sp
+                fontSize = 30.sp
+
             )
         }
 
@@ -433,23 +474,28 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             if(songId==listUtilSongs.get(1).id){
                 winCount++;
                 borderColour2=1
+                sound?.play(3, volumeCoin, volumeCoin, 0, 0, 1F)
             }else{
                 if(winCount>0) winCount--
                 borderColour2=2
+                sound?.play(4, volumeCoin, volumeCoin, 0, 0, 1F)
             }
 
         },
             enabled = isButtonsEnabled,
+            shape = RoundedCornerShape(20.dp),
             colors=ButtonDefaults.buttonColors(GreenMain),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
+                .padding(5.dp, 10.dp)
                 .alpha(alphaButtons)
         ){
             Text(text=buttonText2,
+                textAlign = TextAlign.Center,
+                fontFamily = irishGroverFontFamily,
                 color= White,
                 fontWeight = FontWeight.Bold,
-                fontSize = 35.sp
+                fontSize = 30.sp
             )
         }
         OutlinedButton(border= BorderStroke(strokeWidth,
@@ -468,28 +514,32 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 if(songId==listUtilSongs.get(2).id){
                     winCount++;
                     borderColour3=1
+                    sound?.play(3, volumeCoin, volumeCoin, 0, 0, 1F)
                 }else{
                     if(winCount>0) winCount--
                     borderColour3=2
+                    sound?.play(4, volumeCoin, volumeCoin, 0, 0, 1F)
                 }
 
         },
             enabled = isButtonsEnabled,
+            shape = RoundedCornerShape(20.dp),
             colors=ButtonDefaults.buttonColors(GreenMain),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
+                .padding(5.dp, 10.dp)
                 .alpha(alphaButtons)
         ){
             Text(text=buttonText3,
+                textAlign = TextAlign.Center,
+                fontFamily = irishGroverFontFamily,
                 color= White,
                 fontWeight = FontWeight.Bold,
-                fontSize = 35.sp
+                fontSize = 30.sp
             )
         }
 
         OutlinedButton(border= BorderStroke(strokeWidth, White),
-
             onClick = {
             visibleCount=1f
             visibleWinImage=0f
@@ -516,17 +566,19 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
 
         },
             enabled = isButtonStartEnabled,
+            shape = RoundedCornerShape(20.dp),
             colors=ButtonDefaults.buttonColors(GreenMain),
            //modifier = if (true) Modifier else Modifier.alpha(0.5F)
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
+                .padding(5.dp, 10.dp)
                 .alpha(alphaStartButton)
             ){
             Text(text=buttonTextStart,
+                fontFamily = irishGroverFontFamily,
                 color= MainActionColor,
                 fontWeight = FontWeight.Bold,
-                fontSize = 35.sp
+                fontSize =30.sp
                 )
 
         }
