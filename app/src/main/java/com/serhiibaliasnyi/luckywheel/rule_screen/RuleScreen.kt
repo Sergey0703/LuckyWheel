@@ -80,7 +80,11 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
     val musicDurationMs=10000;
     val alphaDisabled=0.6f
     val strokeWidth=3.dp;
-    val volumeCoin=0.5f
+    val volumeCoin=1f
+
+    var imageLittleCoin:Int by remember {
+        mutableStateOf(0)
+    }
     var imageVisible1 by remember {
         mutableStateOf(false)
     }
@@ -132,9 +136,9 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
     //}
     Log.d("rul", "Recomposition "+playListShuffle.toList())
     Log.d("rul", "RecompositionUtil "+listUtilSongs.toList())
-    val list = remember {
-        mutableListOf<String>()
-    }
+  //  val list = remember {
+  //      mutableListOf<String>()
+  //  }
 
     var buttonText1:String by remember {
         mutableStateOf("")
@@ -339,10 +343,11 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
         }
     )
     if(winCount==5){
-        visibleCount=0f
+     //   visibleCount=0f
+        //    winCount=0
         visibleWinImage=1f
         isPlayingLottie=true
-        winCount=0
+
         sound?.play(2, 1F, 1F, 0, 0, 1F)
         buttonTextStart="Start new Game"
     }
@@ -357,17 +362,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             contentAlignment = Alignment.Center,
 
         ) {
-            Image(
-                alignment = Alignment.Center,
-                painter= painterResource(id = R.drawable.crown),
-                contentDescription = "crown",
-                modifier = Modifier
-                    .padding(0.dp, 20.dp, 0.dp, 0.dp)
-                    .width(120.dp)
-                    .height(120.dp)
-                    .alpha(visibleWinImage)
 
-            )
 
             Row(modifier = Modifier,
                 horizontalArrangement = Arrangement.spacedBy(-30.dp)
@@ -379,7 +374,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                         painter = painterResource(id = R.drawable.coin3),
                         contentDescription = "coin",
                         modifier = Modifier
-                            .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                            .padding(0.dp, 30.dp, 0.dp, 0.dp)
                             .width(70.dp)
                             .height(70.dp)
                             .alpha(1f)
@@ -387,6 +382,19 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                     )
                 }
             }
+
+            Image(
+                alignment = Alignment.Center,
+                painter= painterResource(id = R.drawable.crown),
+                contentDescription = "crown",
+                modifier = Modifier
+                    .padding(0.dp, 2.dp, 0.dp, 0.dp)
+                    .width(120.dp)
+                    .height(120.dp)
+                    .alpha(visibleWinImage)
+
+            )
+
             Text(
                 modifier = Modifier
                     //.fillMaxWidth()
@@ -435,16 +443,21 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             alphaStartButton=1f
             isButtonsEnabled=false
             alphaButtons=alphaDisabled
+            imageVisible1=true
+            alphaCoin1=1f
+
             if(songId==listUtilSongs.get(0).id){
                 winCount++;
                 borderColour1=1
+                imageLittleCoin=R.drawable.coin3
                 sound?.play(3, volumeCoin, volumeCoin, 0, 0, 1F)
-                imageVisible1=true
-                alphaCoin1=1f
+
             }else{
                 if(winCount>0) winCount--
                 borderColour1=2
+                imageLittleCoin=R.drawable.fire_coin2
                 sound?.play(4, volumeCoin, volumeCoin, 0, 0, 1F)
+
             }
 
            },
@@ -462,22 +475,47 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                   //  shape = RoundedCornerShape(16.dp)
                // )
         ){
+
+
             AnimatedVisibility(
                 visible = imageVisible1,
                 enter = fadeIn(animationSpec = tween(1000)),
                 exit = fadeOut(animationSpec = tween(0))
             ) {
-            Image(
-                alignment = Alignment.Center,
-                painter = painterResource(id = R.drawable.coin3),
-                contentDescription = "coin",
-                modifier = Modifier
-                    .padding(0.dp, 0.dp, 0.dp, 0.dp)
-                    .width(50.dp)
-                    .height(50.dp)
-                    .alpha(alphaCoin1)
+               // if( borderColour1==1) {
+                    Image(
+                        alignment = Alignment.Center,
+                        //painter = painterResource(id = imageId),
+                        //painter = painterResource(
+                        //    LocalContext.current.resources.getIdentifier(icon, "drawable", LocalContext.current.packageName)),
+                        painter = painterResource(id = imageLittleCoin),
+                        //   painter = painterResource(id = imageId),
+                        contentDescription = "coin",
+                        modifier = Modifier
+                            .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                            .width(50.dp)
+                            .height(50.dp)
+                            .alpha(alphaCoin1)
 
-            )
+                    )
+            /*    }else {
+
+                    Image(
+                        alignment = Alignment.Center,
+                        //painter = painterResource(id = imageId),
+                        //painter = painterResource(
+                        //    LocalContext.current.resources.getIdentifier(icon, "drawable", LocalContext.current.packageName)),
+                        painter = painterResource(id = R.drawable.fire_coin),
+                        //   painter = painterResource(id = imageId),
+                        contentDescription = "coin",
+                        modifier = Modifier
+                            .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                            .width(50.dp)
+                            .height(50.dp)
+                            .alpha(alphaCoin1)
+
+                    )
+                } */
             }
 
          /*   Icon(
@@ -515,15 +553,18 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             isButtonStartEnabled=true
             isButtonsEnabled=false
             alphaButtons=alphaDisabled
+            imageVisible2=true
+            alphaCoin2=1f
             if(songId==listUtilSongs.get(1).id){
                 winCount++;
                 borderColour2=1
+                imageLittleCoin=R.drawable.coin3
                 sound?.play(3, volumeCoin, volumeCoin, 0, 0, 1F)
-                imageVisible2=true
-                alphaCoin2=1f
+
             }else{
                 if(winCount>0) winCount--
                 borderColour2=2
+                imageLittleCoin=R.drawable.fire_coin2
                 sound?.play(4, volumeCoin, volumeCoin, 0, 0, 1F)
             }
 
@@ -543,7 +584,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             ) {
                 Image(
                     alignment = Alignment.Center,
-                    painter = painterResource(id = R.drawable.coin3),
+                    painter = painterResource(id = imageLittleCoin),
                     contentDescription = "coin",
                     modifier = Modifier
                         .padding(0.dp, 0.dp, 0.dp, 0.dp)
@@ -574,15 +615,18 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 isButtonStartEnabled=true
                 isButtonsEnabled=false
                 alphaButtons=alphaDisabled
+                imageVisible3=true
+                alphaCoin3=1f
                 if(songId==listUtilSongs.get(2).id){
                     winCount++;
                     borderColour3=1
+                    imageLittleCoin=R.drawable.coin3
                     sound?.play(3, volumeCoin, volumeCoin, 0, 0, 1F)
-                    imageVisible3=true
-                    alphaCoin3=1f
+
                 }else{
                     if(winCount>0) winCount--
                     borderColour3=2
+                    imageLittleCoin=R.drawable.fire_coin2
                     sound?.play(4, volumeCoin, volumeCoin, 0, 0, 1F)
                 }
 
@@ -602,7 +646,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             ) {
                 Image(
                     alignment = Alignment.Center,
-                    painter = painterResource(id = R.drawable.coin3),
+                    painter = painterResource(id = imageLittleCoin),
                     contentDescription = "coin",
                     modifier = Modifier
                         .padding(0.dp, 0.dp, 0.dp, 0.dp)
@@ -623,6 +667,10 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
 
         OutlinedButton(border= BorderStroke(strokeWidth, White),
             onClick = {
+                if(winCount==5) {
+                       visibleCount=0f
+                       winCount=0
+                }
             visibleCount=1f
             visibleWinImage=0f
             buttonText1=""
@@ -674,7 +722,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
     LottieAnimation(composition = composition,
         isPlaying = isPlayingLottie,
         speed = 1.5f,
-        iterations = 3,
+        iterations = 2,
         clipSpec = animSpec
     )
 
