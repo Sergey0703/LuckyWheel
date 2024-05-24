@@ -11,11 +11,13 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -43,6 +45,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -336,176 +339,215 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
         buttonTextStart="Start new Game"
     }
 
-    Column(
-        modifier=Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-
-        Box( modifier = Modifier,
-            contentAlignment = Alignment.Center,
-
+    Row(
+        modifier=Modifier.fillMaxSize()
+        .padding(5.dp)
+        .background(color = GreenMain)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth(0.6f),
+            horizontalAlignment = Alignment.CenterHorizontally
+           // horizontalArrangement = Arrangement.Center
         ) {
+/*
+            Box(
+                modifier = Modifier
+                    .background(color = White)
+                    .fillMaxWidth(),
 
+                  //  .weight(1f),
 
-            Row(modifier = Modifier,
-                horizontalArrangement = Arrangement.spacedBy(-30.dp)
+             contentAlignment = Alignment.Center,
+
+                ) {
+
+                Image(
+            //        alignment = Alignment.Center,
+                    painter = painterResource(id = R.drawable.crown),
+                    contentDescription = "crown",
+                    modifier = Modifier
+                        .padding(0.dp, 2.dp, 0.dp, 0.dp)
+                        .width(120.dp)
+                        .height(120.dp)
+                        .alpha(visibleWinImage)
+
+                )
+
+                Text(
+                    modifier = Modifier
+                        //.fillMaxWidth()
+                        .height(0.dp)
+                        .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                        // .wrapContentWidth()
+                        // .wrapContentHeight()
+
+                        // .alpha(visibleCount),
+                        .alpha(0f),
+                    textAlign = TextAlign.Center,
+                    text = winCount.toString(),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 35.sp,
+                    color = Color.White
+                )
+
+            } */
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize()
+            ) {
+                Image(
+                    //painter= painterResource(id = R.drawable.lucky_wheel_bg),
+                    painter = painterResource(id = R.drawable.rulette5),
+                    contentDescription = "lucky wheel",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(10.dp)
+                        .rotate(angle)
+                )
+            }
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .height(70.dp),
+
+                ) {
+            Row(
+                modifier = Modifier
+                    //.background(color = Yellow)
+                    //.fillMaxWidth()
+                    .height(70.dp),
+                  //  .weight(1f),
+                    horizontalArrangement = Arrangement.spacedBy(-30.dp)
+                   // horizontalArrangement = Arrangement.Center
                 //.width(200.dp)
             ) {
-                for(x in 1.. winCount) {
+
+                for (x in 1..winCount) {
                     Image(
                         alignment = Alignment.Center,
                         painter = painterResource(id = R.drawable.coin3),
                         contentDescription = "coin",
                         modifier = Modifier
-                            .padding(0.dp, 30.dp, 0.dp, 0.dp)
+                            .padding(0.dp, 0.dp, 0.dp, 0.dp)
                             .width(70.dp)
                             .height(70.dp)
                             .alpha(1f)
 
                     )
                 }
+               }
             }
-
-            Image(
-                alignment = Alignment.Center,
-                painter= painterResource(id = R.drawable.crown),
-                contentDescription = "crown",
-                modifier = Modifier
-                    .padding(0.dp, 2.dp, 0.dp, 0.dp)
-                    .width(120.dp)
-                    .height(120.dp)
-                    .alpha(visibleWinImage)
-
-            )
-
-            Text(
-                modifier = Modifier
-                    //.fillMaxWidth()
-                    .height(100.dp)
-                    .padding(0.dp, 20.dp, 0.dp, 0.dp)
-                   // .wrapContentWidth()
-                   // .wrapContentHeight()
-
-                   // .alpha(visibleCount),
-                    .alpha(0f),
-                textAlign = TextAlign.Center,
-                text = winCount.toString(),
-                fontWeight = FontWeight.Bold,
-                fontSize = 35.sp,
-                color = Color.White
-            )
-
-        }
-        Box(modifier= Modifier
-            .weight(1f)
-            .fillMaxSize()){
-            Image(
-                //painter= painterResource(id = R.drawable.lucky_wheel_bg),
-                painter= painterResource(id = R.drawable.rulette5),
-                contentDescription = "lucky wheel",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp)
-                    .rotate(angle)
-            )
-        }
 //========================================================
-      //  if (loading) {
+            //  if (loading) {
             LinearProgressIndicator(
-                currentProgress ,
-                modifier = Modifier.fillMaxWidth().padding(10.dp, 5.dp, 10.dp, 5.dp),
+                currentProgress,
+                modifier = Modifier.fillMaxWidth().padding(10.dp, 0.dp, 10.dp, 0.dp),
                 color = MainActionColor,
                 trackColor = White
             )
-      //  }
-        Spacer(Modifier.requiredHeight(3.dp))
-       // Text("Set progress:")
-      /*  Slider(
+            //  }
+            Spacer(Modifier.requiredHeight(3.dp))
+            // Text("Set progress:")
+            /*  Slider(
             modifier = Modifier.width(300.dp),
             value = progress,
             valueRange = 0f..1f,
             onValueChange = { progress = it },
         ) */
-
+        } //Column
 //========================================================
-        for(x in 0.. quantityOfButtons-1) {
-            OutlinedButton(border= BorderStroke(strokeWidth,
-                if (borderColour.get(x)==0){ White}
-                else if(borderColour.get(x)==1) {
-                    MainActionColor}
-                else{Color.Red}
-            ),
+        Column(
+            modifier = Modifier
+            // .fillMaxHeight()
+            // .fillMaxWidth(0.6f)
+        ) {
+            for (x in 0..quantityOfButtons - 1) {
+                OutlinedButton(
+                    border = BorderStroke(
+                        strokeWidth,
+                        if (borderColour.get(x) == 0) {
+                            White
+                        } else if (borderColour.get(x) == 1) {
+                            MainActionColor
+                        } else {
+                            Color.Red
+                        }
+                    ),
 
-                onClick = {
-                    // Log.d("rul", "listUtil="+listUtilSongs.toList().toString())
-                    loading = false
-                    player.pause()
-                    currentValue =0;
-                    buttonTextStart="Start"
-                    isButtonStartEnabled=true
-                    alphaStartButton=1f
-                    isButtonsEnabled=false
-                    alphaButtons=alphaDisabled
-                    imageVisible.set(x, true)
-                    alphaCoin1=1f
-                    //  currentProgress= (musicDurationMs/100).toFloat()
-                    if(songId==listUtilSongs.get(x).id){
-                        winCount++;
-                        borderColour.set(x,1)
-                        imageLittleCoin=R.drawable.coin3
-                        sound?.play(3, volumeCoin, volumeCoin, 0, 0, 1F)
+                    onClick = {
+                        // Log.d("rul", "listUtil="+listUtilSongs.toList().toString())
+                        loading = false
+                        player.pause()
+                        currentValue = 0;
+                        buttonTextStart = "Start"
+                        isButtonStartEnabled = true
+                        alphaStartButton = 1f
+                        isButtonsEnabled = false
+                        alphaButtons = alphaDisabled
+                        imageVisible.set(x, true)
+                        alphaCoin1 = 1f
+                        //  currentProgress= (musicDurationMs/100).toFloat()
+                        if (songId == listUtilSongs.get(x).id) {
+                            winCount++;
+                            borderColour.set(x, 1)
+                            imageLittleCoin = R.drawable.coin3
+                            sound?.play(3, volumeCoin, volumeCoin, 0, 0, 1F)
 
-                    }else{
-                        if(winCount>0) winCount--
-                        borderColour.set(x,2)
-                        imageLittleCoin=R.drawable.fire_coin2
-                        sound?.play(4, volumeCoin, volumeCoin, 0, 0, 1F)
+                        } else {
+                            if (winCount > 0) winCount--
+                            borderColour.set(x, 2)
+                            imageLittleCoin = R.drawable.fire_coin2
+                            sound?.play(4, volumeCoin, volumeCoin, 0, 0, 1F)
 
-                    }
-                },
-                enabled = isButtonsEnabled,
-                shape = RoundedCornerShape(20.dp),
-                colors=ButtonDefaults.buttonColors(GreenMain),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp, 10.dp)
-                    .alpha(alphaButtons)
-                ){
-
-                AnimatedVisibility(
-                    visible = imageVisible.get(x),
-                    enter = fadeIn(animationSpec = tween(1000)),
-                    exit = fadeOut(animationSpec = tween(0))
+                        }
+                    },
+                    enabled = isButtonsEnabled,
+                    shape = RoundedCornerShape(20.dp),
+                    colors = ButtonDefaults.buttonColors(GreenMain),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp, 10.dp)
+                        .alpha(alphaButtons)
                 ) {
-                    Image(
-                        alignment = Alignment.Center,
-                        painter = painterResource(id = imageLittleCoin),
-                        contentDescription = "coin",
-                        modifier = Modifier
-                            .padding(0.dp, 0.dp, 0.dp, 0.dp)
-                            .width(50.dp)
-                            .height(50.dp)
-                            .alpha(alphaCoin1)
+
+                    AnimatedVisibility(
+                        visible = imageVisible.get(x),
+                        enter = fadeIn(animationSpec = tween(1000)),
+                        exit = fadeOut(animationSpec = tween(0))
+                    ) {
+                        Image(
+                            alignment = Alignment.Center,
+                            painter = painterResource(id = imageLittleCoin),
+                            contentDescription = "coin",
+                            modifier = Modifier
+                                .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                                .width(50.dp)
+                                .height(50.dp)
+                                .alpha(alphaCoin1)
+
+                        )
+                    }
+
+                    var buttonText = ""
+                    if (!listUtilSongs.isEmpty()) {
+                        buttonText = listUtilSongs.get(x).name
+                    }
+                    Text(//text=listUtilSongs.get(x).name,
+                        text = buttonText,
+                        textAlign = TextAlign.Center,
+                        fontFamily = irishGroverFontFamily,
+                        color = White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 30.sp
 
                     )
                 }
-
-                var buttonText=""
-                if(!listUtilSongs.isEmpty()){ buttonText=listUtilSongs.get(x).name}
-                Text(//text=listUtilSongs.get(x).name,
-                    text=buttonText,
-                    textAlign = TextAlign.Center,
-                    fontFamily = irishGroverFontFamily,
-                    color= White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 30.sp
-
-                )
             }
-        }
-  //--------------------------------------------
-  /*      OutlinedButton(border= BorderStroke(strokeWidth,
+            //--------------------------------------------
+            /*      OutlinedButton(border= BorderStroke(strokeWidth,
             if (borderColour1==0){ White}
             else if(borderColour1==1) {
                 MainActionColor}
@@ -715,27 +757,32 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             )
         }
     */
-        OutlinedButton(border= BorderStroke(strokeWidth, White),
-            onClick = {
-                if(winCount==5) {
-                       visibleCount=0f
-                       winCount=0
-                }
+            OutlinedButton(
+                border = BorderStroke(strokeWidth, White),
+                onClick = {
+                    if (winCount == 5) {
+                        visibleCount = 0f
+                        winCount = 0
+                    }
 
-            visibleCount=1f
-            visibleWinImage=0f
+                    visibleCount = 1f
+                    visibleWinImage = 0f
 
-            listUtilSongs.clear()
-            for(x in 0..quantityOfButtons-1) {imageVisible.set(x, false)}
-            for(x in 0..quantityOfButtons-1) {borderColour.set(x, 0)}
-            alphaCoin1=0f
-            buttonTextStart=""
-            alphaStartButton=alphaDisabled
-            isButtonsEnabled=false
-            alphaButtons=alphaDisabled
-            isButtonStartEnabled=false
-            songId=-1
-          /*      buttonText1=""
+                    listUtilSongs.clear()
+                    for (x in 0..quantityOfButtons - 1) {
+                        imageVisible.set(x, false)
+                    }
+                    for (x in 0..quantityOfButtons - 1) {
+                        borderColour.set(x, 0)
+                    }
+                    alphaCoin1 = 0f
+                    buttonTextStart = ""
+                    alphaStartButton = alphaDisabled
+                    isButtonsEnabled = false
+                    alphaButtons = alphaDisabled
+                    isButtonStartEnabled = false
+                    songId = -1
+                    /*      buttonText1=""
                 buttonText2=""
                 buttonText3=""
             borderColour1=0
@@ -749,42 +796,44 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             alphaCoin3=0f
 
            */
-            initSongs(playListShuffle,quantityOfSectors,playList,player )
-            //Log.d("rul","playListShuffleButton="+playListShuffle)
-            isPlayingLottie=false
-            rotationValue=((0..360).random().toFloat()+720)+angle
-         //   Log.d("rul", "angle="+(angle%360).toString() +" rotationValue "+rotationValue.toString())
-            sound?.play(1, 1F, 1F, 0, 0, 1F)
+                    initSongs(playListShuffle, quantityOfSectors, playList, player)
+                    //Log.d("rul","playListShuffleButton="+playListShuffle)
+                    isPlayingLottie = false
+                    rotationValue = ((0..360).random().toFloat() + 720) + angle
+                    //   Log.d("rul", "angle="+(angle%360).toString() +" rotationValue "+rotationValue.toString())
+                    sound?.play(1, 1F, 1F, 0, 0, 1F)
 
-            //numberOfTrack.value =numberOfTrack.value+1
+                    //numberOfTrack.value =numberOfTrack.value+1
 
-        },
-            enabled = isButtonStartEnabled,
-            shape = RoundedCornerShape(20.dp),
-            colors=ButtonDefaults.buttonColors(GreenMain),
-           //modifier = if (true) Modifier else Modifier.alpha(0.5F)
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(5.dp, 10.dp)
-                .alpha(alphaStartButton)
-            ){
-            Text(text=buttonTextStart,
-                fontFamily = irishGroverFontFamily,
-                color= MainActionColor,
-                fontWeight = FontWeight.Bold,
-                fontSize =30.sp
+                },
+                enabled = isButtonStartEnabled,
+                shape = RoundedCornerShape(20.dp),
+                colors = ButtonDefaults.buttonColors(GreenMain),
+                //modifier = if (true) Modifier else Modifier.alpha(0.5F)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp, 10.dp)
+                    .alpha(alphaStartButton)
+            ) {
+                Text(
+                    text = buttonTextStart,
+                    fontFamily = irishGroverFontFamily,
+                    color = MainActionColor,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp
                 )
 
+            }
         }
+
     }
+
     LottieAnimation(composition = composition,
         isPlaying = isPlayingLottie,
         speed = 1.5f,
         iterations = 2,
         clipSpec = animSpec
     )
-
-
 
 }
 
