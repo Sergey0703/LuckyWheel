@@ -474,10 +474,10 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             }
 
 //========================================================
-            //  if (loading) {
+            /*
             LinearProgressIndicator(
               //  currentProgress,
-                (sliderPosition.longValue/1000).toFloat(),
+                (sliderPosition.longValue/100000).toFloat(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp, 0.dp, 10.dp, 0.dp),
@@ -485,7 +485,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 trackColor = White
 
             )
-
+         */
             Slider(
                 value = (sliderPosition.longValue/1000).toFloat(),
                 //onValueChange = { sliderPosition = it },
@@ -511,16 +511,9 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 valueRange = 0f..10f
 
             )
-            Text(text = (currentProgress/10000).toString()+"-"+(sliderPosition.longValue/1000).toFloat())
-            //  }
-          //  Spacer(Modifier.requiredHeight(3.dp))
-            // Text("Set progress:")
-            /*  Slider(
-            modifier = Modifier.width(300.dp),
-            value = progress,
-            valueRange = 0f..1f,
-            onValueChange = { progress = it },
-        ) */
+         // Text(text = (currentProgress/100000).toString()+"-"+(sliderPosition.longValue/1000).toFloat())
+         //  Spacer(Modifier.requiredHeight(3.dp))
+
         } //Column
 //========================================================
         Column(
@@ -552,6 +545,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                                 Log.d("rul", "Click")
 
                                 loading = false
+                                sliderPosition.longValue=0;
                               //  scope.// STOPSHIP:
                                 player.pause()
                                 currentValue = 0;
