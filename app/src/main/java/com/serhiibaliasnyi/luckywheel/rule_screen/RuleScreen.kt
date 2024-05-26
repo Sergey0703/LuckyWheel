@@ -997,7 +997,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             )
         }
     */
-
+/*
             OutlinedButton(
                 border = BorderStroke(strokeWidth, White),
                 onClick = {
@@ -1051,6 +1051,8 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 )
 
             }
+
+        */
         }
 
     }
