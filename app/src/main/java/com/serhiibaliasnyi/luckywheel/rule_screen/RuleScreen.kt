@@ -94,7 +94,9 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
     val quantityOfButtons:Int=3
 
     val musicDurationMs=10000;
-    val alphaDisabled=0.6f
+    val alphaDisabled=0.0f
+    val alphaRuletteDisabled=0.2f
+
     val strokeWidth=3.dp;
     val volumeCoin=1f
 
@@ -137,6 +139,10 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
     var alphaStartButton:Float by remember {
          mutableStateOf(1f)
      }
+
+    var alphaRulette:Float by remember {
+        mutableStateOf(alphaRuletteDisabled)
+    }
     var alphaButtons:Float by remember {
         mutableStateOf(alphaDisabled)
     }
@@ -268,13 +274,19 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                     player.pause()
                     Log.d("rul", "pause="+currentValue.toString())
                     currentValue =0;
-                    sliderPosition.longValue=0
+                //    sliderPosition.longValue=0
                     isButtonStartEnabled=true
                     isButtonsEnabled=false
                     buttonTextStart="Start"
                     alphaStartButton=1f
                     alphaButtons=alphaDisabled
+                    alphaRulette=alphaRuletteDisabled
                     if(winCount>0) winCount--
+                    alphaCoin1 = 1f
+                    imageLittleCoin=R.drawable.fire_coin2
+                    for(x in 0 .. quantityOfButtons-1){
+                        imageVisible.set(x, true)
+                    }
                     sound?.play(4, volumeCoin, volumeCoin, 0, 0, 1F)
                   //  currentPosition.longValue = 0
                 //    if (player.isPlaying) {
@@ -326,19 +338,19 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                  listUtilSongs.add(it)
              }
                 Log.d("rul","Song="+ song.name)
-            loading = true
+         /*   loading = true
             scope.launch {
                 /*loadProgress {loading,  progress ->
                     currentProgress = progress as Float
                 }
                  */
                 Log.d("rul","loading="+ loading)
-                loadProgress( loading,  {progress -> currentProgress = progress as Float})
+            //    loadProgress( loading,  {progress -> currentProgress = progress as Float})
 
 
                 loading = false // Reset loading when the coroutine finishes
             }
-
+        */
             if (player.isPlaying) {
                 player.pause()
             } else {
@@ -376,6 +388,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
             .padding(5.dp)
             .background(color = GreenMain)
     ) {
+
         Column(
             modifier = Modifier
                 .fillMaxHeight()
@@ -425,54 +438,126 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 )
 
             } */
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .height(70.dp),
-
-                ) {
-                Row(
+            Row() {
+                Column(
                     modifier = Modifier
-                        //.background(color = Yellow)
-                        //.fillMaxWidth()
-                        .height(70.dp),
-                    //  .weight(1f),
-                    horizontalArrangement = Arrangement.spacedBy(-30.dp)
+                        .fillMaxHeight()
+                        .fillMaxWidth(0.1f),
+                    //horizontalAlignment = Alignment.CenterHorizontally
                     // horizontalArrangement = Arrangement.Center
-                    //.width(200.dp)
                 ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .width(70.dp),
 
-                    for (x in 1..winCount) {
-                        Image(
-                            alignment = Alignment.Center,
-                            painter = painterResource(id = R.drawable.coin3),
-                            contentDescription = "coin",
+                        ) {
+                        Column(
                             modifier = Modifier
-                                .padding(0.dp, 0.dp, 0.dp, 0.dp)
-                                .width(70.dp)
-                                .height(70.dp)
-                                .alpha(1f)
+                               // .background(color = Yellow)
+                                //.fillMaxWidth()
+                                .width(70.dp),
+                            //  .weight(1f),
+                            // horizontalArrangement = Arrangement.spacedBy(-30.dp)
 
-                        )
+                        ) {
+
+                            for (x in 1..winCount) {
+                                Image(
+                                    alignment = Alignment.Center,
+                                    painter = painterResource(id = R.drawable.coin3),
+                                    contentDescription = "coin",
+                                    modifier = Modifier
+                                        .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                                        .width(70.dp)
+                                        .height(70.dp)
+                                        .alpha(1f)
+
+                                )
+                            }
+                        }
                     }
                 }
-            }
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxSize()
-            ) {
-                Image(
-                    //painter= painterResource(id = R.drawable.lucky_wheel_bg),
-                    painter = painterResource(id = R.drawable.rulette5),
-                    contentDescription = "lucky wheel",
+                Box(
                     modifier = Modifier
+                        .weight(1f)
                         .fillMaxSize()
-                        .padding(5.dp)
-                        .rotate(angle)
-                )
-            }
+                        .clickable {
+                            if (!isButtonStartEnabled) return@clickable
+                            if (winCount == 5) {
+                                visibleCount = 0f
+                                winCount = 0
+                            }
 
+                            visibleCount = 1f
+                            visibleWinImage = 0f
+
+                            listUtilSongs.clear()
+                            for (x in 0..quantityOfButtons - 1) {
+                                imageVisible.set(x, false)
+                            }
+                            for (x in 0..quantityOfButtons - 1) {
+                                borderColour.set(x, 0)
+                            }
+                            alphaCoin1 = 0f
+                            buttonTextStart = ""
+                            alphaStartButton = alphaDisabled
+                            isButtonsEnabled = false
+                            alphaButtons = alphaDisabled
+                            alphaRulette=1f
+                            isButtonStartEnabled = false
+                            songId = -1
+
+                            initSongs(playListShuffle, quantityOfSectors, playList, player)
+                            //Log.d("rul","playListShuffleButton="+playListShuffle)
+                            isPlayingLottie = false
+                            rotationValue = ((0..360).random().toFloat() + 720) + angle
+                            //   Log.d("rul", "angle="+(angle%360).toString() +" rotationValue "+rotationValue.toString())
+                            sound?.play(1, 1F, 1F, 0, 0, 1F)
+
+                        }
+                ) {
+                    Image(
+                        //painter= painterResource(id = R.drawable.lucky_wheel_bg),
+                        painter = painterResource(id = R.drawable.rulette5_2),
+                        contentDescription = "lucky wheel",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(5.dp)
+                            .rotate(angle)
+                            .alpha(alphaRulette)
+                    )
+                    Image(
+                        //painter= painterResource(id = R.drawable.lucky_wheel_bg),
+                        painter = painterResource(id = R.drawable.arrow2),
+                        contentDescription = "arrow",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(5.dp)
+                         //   .rotate(angle)
+                    )
+                    Image(
+                        //painter= painterResource(id = R.drawable.lucky_wheel_bg),
+                        painter = painterResource(id = R.drawable.title_click2),
+                        contentDescription = "arrow",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(5.dp)
+                            .alpha(alphaStartButton)
+                        //   .rotate(angle)
+                    )
+
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(0.1f),
+                    //horizontalAlignment = Alignment.CenterHorizontally
+                    // horizontalArrangement = Arrangement.Center
+                ) {
+                }
+            }
 //========================================================
             /*
             LinearProgressIndicator(
@@ -486,31 +571,34 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
 
             )
          */
-            Slider(
-                value = (sliderPosition.longValue/1000).toFloat(),
-                //onValueChange = { sliderPosition = it },
-                onValueChange = {  },
-                thumb = {
-                   // val shape = RectangleShape
-                    Spacer(
-                        modifier = Modifier
-                            .size(2.dp)
+            Row() {
+                Slider(
+                    value = (sliderPosition.longValue / 1000).toFloat(),
+                    modifier = Modifier.weight(0.1f),
+                    //onValueChange = { sliderPosition = it },
+                    onValueChange = { },
+                    thumb = {
+                        // val shape = RectangleShape
+                        Spacer(
+                            modifier = Modifier
+                                .size(2.dp)
 
-                    //        .hoverable(interactionSource = interactionSource)
-                    //        .shadow(if (enabled) 6.dp else 0.dp, shape, clip = false)
-                    //        .background(Red, shape)
-                    )
-                },
+                            //        .hoverable(interactionSource = interactionSource)
+                            //        .shadow(if (enabled) 6.dp else 0.dp, shape, clip = false)
+                            //        .background(Red, shape)
+                        )
+                    },
 
-                colors = SliderDefaults.colors(
-                    thumbColor = MainActionColor,
-                    activeTrackColor = MainActionColor,
-                    inactiveTrackColor = White,
-                ),
-               // steps = 100,
-                valueRange = 0f..10f
+                    colors = SliderDefaults.colors(
+                        thumbColor = MainActionColor,
+                        activeTrackColor = MainActionColor,
+                        inactiveTrackColor = White,
+                    ),
+                    // steps = 100,
+                    valueRange = 0f..9f
 
-            )
+                )
+            }
          // Text(text = (currentProgress/100000).toString()+"-"+(sliderPosition.longValue/1000).toFloat())
          //  Spacer(Modifier.requiredHeight(3.dp))
 
@@ -552,6 +640,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                                 buttonTextStart = "Start"
                                 isButtonStartEnabled = true
                                 alphaStartButton = 1f
+                                alphaRulette=0.2f
                                 isButtonsEnabled = false
                                 alphaButtons = alphaDisabled
                                 imageVisible.set(x, true)
@@ -941,9 +1030,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                     rotationValue = ((0..360).random().toFloat() + 720) + angle
                     //   Log.d("rul", "angle="+(angle%360).toString() +" rotationValue "+rotationValue.toString())
                     sound?.play(1, 1F, 1F, 0, 0, 1F)
-
                     //numberOfTrack.value =numberOfTrack.value+1
-
                 },
                 enabled = isButtonStartEnabled,
                 shape = RoundedCornerShape(10.dp),
