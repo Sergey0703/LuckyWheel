@@ -17,6 +17,7 @@ import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+//import androidx.compose.foundation.layout.BoxScopeInstance.matchParentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,6 +29,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
@@ -57,8 +59,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.Color.Companion.Yellow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -74,10 +78,11 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieClipSpec
 import com.serhiibaliasnyi.luckywheel.MainActivity
 import com.serhiibaliasnyi.luckywheel.R
-import com.serhiibaliasnyi.luckywheel.ui.theme.GreenBackground
-import com.serhiibaliasnyi.luckywheel.ui.theme.GreenBg
-import com.serhiibaliasnyi.luckywheel.ui.theme.GreenMain
+//import com.serhiibaliasnyi.luckywheel.ui.theme.GreenBackground
+//import com.serhiibaliasnyi.luckywheel.ui.theme.GreenBg
+//import com.serhiibaliasnyi.luckywheel.ui.theme.GreenMain
 import com.serhiibaliasnyi.luckywheel.ui.theme.MainActionColor
+import com.serhiibaliasnyi.luckywheel.ui.theme.MainBlue
 import com.serhiibaliasnyi.luckywheel.ui.theme.irishGroverFontFamily
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -95,7 +100,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
 
     val musicDurationMs=10000;
     val alphaDisabled=0.0f
-    val alphaRuletteDisabled=0.2f
+    val alphaRuletteDisabled=1f
 
     val strokeWidth=3.dp;
     val volumeCoin=1f
@@ -104,9 +109,9 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
     val imageVisible = remember { mutableStateListOf(false, false, false) }
     val borderColour =remember {mutableStateListOf(0, 0, 0)}
 
-    var currentProgress by remember { mutableStateOf(0f) }
-    var loading by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope() // Create a coroutine scope
+    //var currentProgress by remember { mutableStateOf(0f) }
+    //var loading by remember { mutableStateOf(false) }
+    //val scope = rememberCoroutineScope() // Create a coroutine scope
 
     var imageLittleCoin:Int by remember {
         mutableStateOf(0)
@@ -166,7 +171,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
   //  Log.d("rul", "Recomposition "+playListShuffle.toList())
   //  Log.d("rul", "RecompositionUtil "+listUtilSongs.toList())
 
-
+/*
     var buttonText1:String by remember {
         mutableStateOf("")
     }
@@ -178,7 +183,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
     var buttonText3:String by remember {
         mutableStateOf("")
     }
-
+*/
     var borderColour1:Int by remember {
         mutableStateOf(0)
     }
@@ -283,7 +288,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                     alphaRulette=alphaRuletteDisabled
                     if(winCount>0) winCount--
                     alphaCoin1 = 1f
-                    imageLittleCoin=R.drawable.fire_coin2
+                    imageLittleCoin=R.drawable.light
                     for(x in 0 .. quantityOfButtons-1){
                         imageVisible.set(x, true)
                     }
@@ -338,7 +343,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                  listUtilSongs.add(it)
              }
                 Log.d("rul","Song="+ song.name)
-         /*   loading = true
+            /*   loading = true
             scope.launch {
                 /*loadProgress {loading,  progress ->
                     currentProgress = progress as Float
@@ -381,12 +386,17 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
         sound?.play(2, 1F, 1F, 0, 0, 1F)
         buttonTextStart="Start new Game"
     }
-
+    Image(painter = painterResource(id = R.drawable.blue_sky2),
+        contentDescription = "bg",
+        modifier= Modifier
+            .fillMaxSize()
+            .alpha(0.7f),
+        contentScale = ContentScale.FillBounds)
     Row(
         modifier= Modifier
             .fillMaxSize()
             .padding(5.dp)
-            .background(color = GreenMain)
+         //   .background(color = GreenMain)
     ) {
 
         Column(
@@ -465,7 +475,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                             for (x in 1..winCount) {
                                 Image(
                                     alignment = Alignment.Center,
-                                    painter = painterResource(id = R.drawable.coin3),
+                                    painter = painterResource(id = R.drawable.funny_sun),
                                     contentDescription = "coin",
                                     modifier = Modifier
                                         .padding(0.dp, 0.dp, 0.dp, 0.dp)
@@ -519,7 +529,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 ) {
                     Image(
                         //painter= painterResource(id = R.drawable.lucky_wheel_bg),
-                        painter = painterResource(id = R.drawable.rulette5_2),
+                        painter = painterResource(id = R.drawable.sun2),
                         contentDescription = "lucky wheel",
                         modifier = Modifier
                             .fillMaxSize()
@@ -527,7 +537,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                             .rotate(angle)
                             .alpha(alphaRulette)
                     )
-                    Image(
+                   /* Image(
                         //painter= painterResource(id = R.drawable.lucky_wheel_bg),
                         painter = painterResource(id = R.drawable.arrow2),
                         contentDescription = "arrow",
@@ -535,10 +545,10 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                             .fillMaxSize()
                             .padding(5.dp)
                          //   .rotate(angle)
-                    )
+                    ) */
                     Image(
                         //painter= painterResource(id = R.drawable.lucky_wheel_bg),
-                        painter = painterResource(id = R.drawable.title_click2),
+                        painter = painterResource(id = R.drawable.title_click3),
                         contentDescription = "arrow",
                         modifier = Modifier
                             .fillMaxSize()
@@ -605,23 +615,95 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
         } //Column
 //========================================================
         Column(
-            modifier = Modifier.background(GreenBackground)
+           // modifier = Modifier.background(GreenBackground)
             // .fillMaxHeight()
             // .fillMaxWidth(0.6f)
         ) {
             for (x in 0..quantityOfButtons - 1) {
 
-                Card(
+                Box(
+                    modifier = Modifier
+                        .weight(0.33f)
+                        .fillMaxSize()
+                     //   .background(White)
+                        .clickable {
+                            if (!isButtonsEnabled) return@clickable
+                            // Log.d("rul","Click2")
+                            Log.d("rul", "Click")
+
+                            // loading = false
+                            sliderPosition.longValue=0;
+                            //  scope.// STOPSHIP:
+                            player.pause()
+                            currentValue = 0;
+                            buttonTextStart = "Start"
+                            isButtonStartEnabled = true
+                            alphaStartButton = 1f
+                            alphaRulette=alphaRuletteDisabled
+                            isButtonsEnabled = false
+                            alphaButtons = alphaDisabled
+                            imageVisible.set(x, true)
+                            alphaCoin1 = 1f
+                            //  currentProgress= (musicDurationMs/100).toFloat()
+                            if (songId == listUtilSongs.get(x).id) {
+                                winCount++;
+                             //   borderColour.set(x, 1)
+                                imageLittleCoin = R.drawable.funny_sun
+                                sound?.play(3, volumeCoin, volumeCoin, 0, 0, 1F)
+
+                            } else {
+                                if (winCount > 0) winCount--
+                            //    borderColour.set(x, 2)
+                                imageLittleCoin = R.drawable.light
+                                sound?.play(4, volumeCoin, volumeCoin, 0, 0, 1F)
+
+                            }
+                        },
+                            contentAlignment = Alignment.CenterStart,
+                ) {
+                    Image(
+                        //painter= painterResource(id = R.drawable.lucky_wheel_bg),
+                        painter = painterResource(id = R.drawable.cloud),
+                        contentDescription = "cloud",
+                        contentScale = ContentScale.FillBounds,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(5.dp)
+                          //  .rotate(angle)
+                          //  .alpha(alphaRulette)
+                    )
+                    var buttonText = ""
+                    if (!listUtilSongs.isEmpty()) {
+                        buttonText = listUtilSongs.get(x).name
+                    }
+                    Text(
+                        text = buttonText,
+                        textAlign = TextAlign.Center,
+                        //fontFamily = FontFamily.Serif,
+                        fontFamily = irishGroverFontFamily,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MainBlue,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentWidth()
+                            .padding(5.dp, 3.dp)
+                         //   .background(color = Yellow)
+                            .wrapContentHeight(align = Alignment.CenterVertically),
+                    )
+                }
+                /*Card(
 
                     colors = CardDefaults.cardColors(
                         // containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        containerColor = GreenMain
+                        containerColor = White
                     ),
                     //onClick = {Log.d("rul","Click2")},
                     //enabled = isButtonsEnabled,
                     modifier = Modifier
                         // .alpha(alphaButtons)
                         .fillMaxWidth()
+                        //.background(R.drawable.background)
                         .padding(3.dp)
                         .weight(0.25f)
                         .clickable(
@@ -632,7 +714,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                                 // Log.d("rul","Click2")
                                 Log.d("rul", "Click")
 
-                                loading = false
+                               // loading = false
                                 sliderPosition.longValue=0;
                               //  scope.// STOPSHIP:
                                 player.pause()
@@ -640,7 +722,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                                 buttonTextStart = "Start"
                                 isButtonStartEnabled = true
                                 alphaStartButton = 1f
-                                alphaRulette=0.2f
+                                alphaRulette=alphaRuletteDisabled
                                 isButtonsEnabled = false
                                 alphaButtons = alphaDisabled
                                 imageVisible.set(x, true)
@@ -649,13 +731,13 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                                 if (songId == listUtilSongs.get(x).id) {
                                     winCount++;
                                     borderColour.set(x, 1)
-                                    imageLittleCoin = R.drawable.coin3
+                                    imageLittleCoin = R.drawable.funny_sun
                                     sound?.play(3, volumeCoin, volumeCoin, 0, 0, 1F)
 
                                 } else {
                                     if (winCount > 0) winCount--
                                     borderColour.set(x, 2)
-                                    imageLittleCoin = R.drawable.fire_coin2
+                                    imageLittleCoin = R.drawable.light
                                     sound?.play(4, volumeCoin, volumeCoin, 0, 0, 1F)
 
                                 }
@@ -663,47 +745,59 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                         )
 
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        AnimatedVisibility(
-                            visible = imageVisible.get(x),
-                            enter = fadeIn(animationSpec = tween(1000)),
-                            exit = fadeOut(animationSpec = tween(0))
-                        ) {
-                            Image(
-                                alignment = Alignment.Center,
-                                painter = painterResource(id = imageLittleCoin),
-                                contentDescription = "coin",
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                       /* Image(
+                            painter = painterResource(id = R.drawable.background),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop
+                            // modifier = Modifier.matchParentSize()
+                        ) */
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            AnimatedVisibility(
+                                visible = imageVisible.get(x),
+                                enter = fadeIn(animationSpec = tween(1000)),
+                                exit = fadeOut(animationSpec = tween(0))
+                            ) {
+                                Image(
+                                    alignment = Alignment.Center,
+                                    painter = painterResource(id = imageLittleCoin),
+                                    contentDescription = "coin",
+                                    modifier = Modifier
+                                        .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                                        .width(50.dp)
+                                        .height(50.dp)
+                                        .alpha(alphaCoin1)
+
+                                )
+                            }
+
+                            var buttonText = ""
+                            if (!listUtilSongs.isEmpty()) {
+                                buttonText = listUtilSongs.get(x).name
+                            }
+                            Text(
+                                text = buttonText,
+                                textAlign = TextAlign.Center,
+                                //fontFamily = FontFamily.Serif,
+                                fontFamily = irishGroverFontFamily,
+                                fontSize = 30.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MainBlue,
                                 modifier = Modifier
-                                    .padding(0.dp, 0.dp, 0.dp, 0.dp)
-                                    .width(50.dp)
-                                    .height(50.dp)
-                                    .alpha(alphaCoin1)
-
-                            )
-                        }
-
-                        var buttonText = ""
-                        if (!listUtilSongs.isEmpty()) {
-                            buttonText = listUtilSongs.get(x).name
-                        }
-                        Text(
-                            text = buttonText,
-                            textAlign = TextAlign.Center,
-                            //fontFamily = FontFamily.Serif,
-                            fontFamily = irishGroverFontFamily,
-                            fontSize = 30.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = White,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                // .clickable {
+                                    .fillMaxWidth()
+                                    // .clickable {
 //
 //                            }
-                                .wrapContentWidth()
-                                .padding(5.dp, 3.dp)
-                        )
+                                    .wrapContentWidth()
+                                    .padding(5.dp, 3.dp)
+                            )
+                        }
                     }
                 }
+                */
                 /*
                 OutlinedButton(
                     border = BorderStroke(
@@ -1067,14 +1161,14 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
 
 }
 
-suspend fun loadProgress( load:Boolean, updateProgress: (Float) -> Unit) {
+/*suspend fun loadProgress( load:Boolean, updateProgress: (Float) -> Unit) {
     if (load) {
         for (i in 1..(10000 / 100).toInt()) {
             updateProgress(i.toFloat() / 100)
             delay(100)
         }
     }
-}
+} */
 
 
 fun  getUtilSongs(song : MainActivity.Music,list:List<MainActivity.Music> ): MutableList<MainActivity.Music> {
@@ -1090,7 +1184,7 @@ fun  getUtilSongs(song : MainActivity.Music,list:List<MainActivity.Music> ): Mut
         // тут отрезаем не нужную часть
         //  list.subList(returnList.size - amount, returnList.size).clear()
         // list.subList(0, returnList.size)
-        Collections.shuffle(returnListUtil.subList(0,3))
+        Collections.shuffle(returnListUtil.subList(0,2))
         squeezeListUtil= returnListUtil
 
         // squeezeList= returnList.subList(returnList.size - amount, returnList.size)
