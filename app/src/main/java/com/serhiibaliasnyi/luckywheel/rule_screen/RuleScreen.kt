@@ -386,11 +386,11 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
         sound?.play(2, 1F, 1F, 0, 0, 1F)
         buttonTextStart="Start new Game"
     }
-    Image(painter = painterResource(id = R.drawable.blue_sky2),
+    Image(painter = painterResource(id = R.drawable.bg3),
         contentDescription = "bg",
         modifier= Modifier
             .fillMaxSize()
-            .alpha(0.7f),
+            .alpha(0.6f),
         contentScale = ContentScale.FillBounds)
     Row(
         modifier= Modifier
@@ -475,7 +475,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                             for (x in 1..winCount) {
                                 Image(
                                     alignment = Alignment.Center,
-                                    painter = painterResource(id = R.drawable.funny_sun),
+                                    painter = painterResource(id = R.drawable.coin3),
                                     contentDescription = "coin",
                                     modifier = Modifier
                                         .padding(0.dp, 0.dp, 0.dp, 0.dp)
@@ -529,8 +529,18 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 ) {
                     Image(
                         //painter= painterResource(id = R.drawable.lucky_wheel_bg),
-                        painter = painterResource(id = R.drawable.sun2),
+                        painter = painterResource(id = R.drawable.external_rul8),
                         contentDescription = "lucky wheel",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(5.dp)
+                          //  .rotate(angle)
+                            .alpha(alphaRulette)
+                    )
+                    Image(
+                        //painter= painterResource(id = R.drawable.lucky_wheel_bg),
+                        painter = painterResource(id = R.drawable.internal_rul8),
+                        contentDescription = "arrow",
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(5.dp)
@@ -538,15 +548,6 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                             .alpha(alphaRulette)
                     )
                    /* Image(
-                        //painter= painterResource(id = R.drawable.lucky_wheel_bg),
-                        painter = painterResource(id = R.drawable.arrow2),
-                        contentDescription = "arrow",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(5.dp)
-                         //   .rotate(angle)
-                    ) */
-                    Image(
                         //painter= painterResource(id = R.drawable.lucky_wheel_bg),
                         painter = painterResource(id = R.drawable.title_click3),
                         contentDescription = "arrow",
@@ -556,7 +557,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                             .alpha(alphaStartButton)
                         //   .rotate(angle)
                     )
-
+                   */
                 }
 
                 Column(
@@ -633,6 +634,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
 
                             // loading = false
                             sliderPosition.longValue=0;
+                        //    listUtilSongs.clear()
                             //  scope.// STOPSHIP:
                             player.pause()
                             currentValue = 0;
@@ -661,9 +663,13 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                         },
                             contentAlignment = Alignment.CenterStart,
                 ) {
+                    var cloud:Int=R.drawable.button0
+                   if(x==1) cloud=R.drawable.button2
+                    else if(x==2) cloud=R.drawable.button4
+
                     Image(
                         //painter= painterResource(id = R.drawable.lucky_wheel_bg),
-                        painter = painterResource(id = R.drawable.cloud),
+                        painter = painterResource(id = cloud),
                         contentDescription = "cloud",
                         contentScale = ContentScale.FillBounds,
                         modifier = Modifier
@@ -683,11 +689,11 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                         fontFamily = irishGroverFontFamily,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MainBlue,
+                        color = White,
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentWidth()
-                            .padding(5.dp, 3.dp)
+                            .padding(15.dp, 5.dp)
                          //   .background(color = Yellow)
                             .wrapContentHeight(align = Alignment.CenterVertically),
                     )
