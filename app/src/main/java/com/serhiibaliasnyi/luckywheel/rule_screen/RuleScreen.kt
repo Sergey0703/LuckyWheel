@@ -4,6 +4,7 @@ import android.media.SoundPool
 import android.net.Uri
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
@@ -114,7 +115,7 @@ import kotlin.time.Duration.Companion.seconds
     override fun tryEmit(interaction: Interaction) = true
 } */
 //@OptIn(ExperimentalMaterial3Api::class)
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPlayer, playList: List<MainActivity.Music>) {
     val quantityOfSectors:Int=8
@@ -161,7 +162,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
 
     //var currentProgress by remember { mutableStateOf(0f) }
     //var loading by remember { mutableStateOf(false) }
-    //val scope = rememberCoroutineScope() // Create a coroutine scope
+    val scope = rememberCoroutineScope() // Create a coroutine scope
 
     var imageLittleCoin:Int by remember {
         mutableStateOf(0)
@@ -253,7 +254,9 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
         mutableStateOf(false)
     }
 
-
+    var winVisible:Boolean by remember{
+        mutableStateOf(false)
+    }
     var currentValue by remember { mutableStateOf(0L) }
     var sliderPosition = remember {
         mutableLongStateOf(0)
@@ -434,10 +437,23 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
     val flashState: Float by animateFloatAsState(
         targetValue = flashValue,
         animationSpec = tween(
-            durationMillis = 2000,
+            durationMillis = 4000,
             easing = LinearOutSlowInEasing
         ),
         finishedListener = {
+           // scope.launch {
+           //     sound?.play(2, 1F, 1F, 0, 0, 1F)
+           // }
+                winCount=0
+                flashValue = 0f
+                Log.d("rul", "finish")
+                winVisible = false
+                visibleWinImage=0f
+            for (x in 0..quantityOfButtons - 1) {
+                imageVisible.set(x, false)
+            }
+            listUtilSongs.clear()
+               alphaCoin1 = 0f
 
         }
     )
@@ -482,10 +498,19 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
      //   visibleCount=0f
         //    winCount=0
 
-      //  isPlayingLottie=true
-        visibleWinImage=1f
-        sound?.play(2, 1F, 1F, 0, 0, 1F)
+       // isPlayingLottie=true
 
+        winVisible=true
+        visibleWinImage=1f
+      //  flashValue=1f
+       // scope.launch {
+        //    sound?.play(2, 1F, 1F, 0, 0, 1F)
+        //}
+        //   winCount=0
+      //  sound?.play(2, 1F, 1F, 0, 0, 1F)
+      //  scope.launch{
+            sound?.play(2, 1F, 1F, 0, 0, 1F)
+     //   }
         buttonTextStart="Start new Game"
     }
     Image(painter = painterResource(id = R.drawable.bg6),
@@ -597,7 +622,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                     }
                     //}
                 }
-             //   Row(){
+
                 Box(
                     // interactionSource = remember { NoRippleInteractionSource() },
                     modifier = Modifier
@@ -612,7 +637,8 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
 
                             visibleCount = 1f
                             visibleWinImage = 0f
-
+                            flashValue=0f
+                            winVisible=false
                             listUtilSongs.clear()
                             for (x in 0..quantityOfButtons - 1) {
                                 imageVisible.set(x, false)
@@ -678,11 +704,16 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                             //   .rotate(angle)
                         )
                     }
-                  /* AnimatedVisibility(
-                        visible = true,
-                        enter = fadeIn(animationSpec = tween(1000)),
-                        exit = fadeOut(animationSpec = tween(1000))
-                    ) { */
+                    Row(){
+
+
+                 /* AnimatedVisibility(
+                        visible = winVisible,
+                        enter = fadeIn(animationSpec = tween(2000)),
+                        exit = fadeOut(animationSpec = tween(1))
+                    ) {*/
+                        if (visibleWinImage == 1f) {
+                        //    flashValue=1f
                         Image(
                             //painter= painterResource(id = R.drawable.lucky_wheel_bg),
                             painter = painterResource(id = R.drawable.crown),
@@ -692,14 +723,20 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                                 .fillMaxSize()
                                 .padding(5.dp)
                                 .alpha(visibleWinImage)
+                             //   .alpha(flashState)
                             //   .scale(heartbeatAnimation)
-                            // .scale(heartScale),
+                                .scale(1.4f),
                             // .background(Color.Cyan.copy(flashAnimation))
                             //   .rotate(angle)
                         )
-                    //}
+                      // if (this.transition.currentState == this.transition.targetState){
+                         //  Log.d("rul","Ok!!!!!!!!!!")
+                         //   winVisible=false
+                         //  visibleWinImage=0f
+                     //  }
+                    }
                 }
-            //}
+            }
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
