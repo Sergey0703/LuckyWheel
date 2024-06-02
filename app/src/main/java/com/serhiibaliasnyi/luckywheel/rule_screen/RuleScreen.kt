@@ -4,8 +4,16 @@ import android.media.SoundPool
 import android.net.Uri
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -14,6 +22,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,6 +46,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -58,10 +68,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Blue
+import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.Color.Companion.Yellow
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -86,17 +99,27 @@ import com.serhiibaliasnyi.luckywheel.ui.theme.MainBlue
 import com.serhiibaliasnyi.luckywheel.ui.theme.irishGroverFontFamily
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import java.util.Collections
 import kotlin.time.Duration.Companion.seconds
 
+/*class NoRippleInteractionSource : MutableInteractionSource {
 
+    override val interactions: Flow<Interaction> = emptyFlow()
+
+    override suspend fun emit(interaction: Interaction) {}
+
+    override fun tryEmit(interaction: Interaction) = true
+} */
 //@OptIn(ExperimentalMaterial3Api::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPlayer, playList: List<MainActivity.Music>) {
     val quantityOfSectors:Int=8
     val quantityOfButtons:Int=3
+    val quantityOfWinCount:Int =2
 
     val musicDurationMs=10000;
     val alphaDisabled=0.0f
@@ -104,7 +127,34 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
 
     val strokeWidth=3.dp;
     val volumeCoin=1f
+    val infiniteTransition = rememberInfiniteTransition()
 
+    val heartbeatAnimation by infiniteTransition.animateFloat(
+        initialValue = 0.9f,
+        targetValue = 1.1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+
+    val flashAnimation by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 0f,
+        //durationMillis = 2000,
+       // animationSpec = tween(
+       //     durationMillis = 2000,
+       //     easing = LinearOutSlowInEasing
+       // )
+        animationSpec = infiniteRepeatable(
+          //  durationMillis = 2000,
+            tween(1000, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+
+
+    )
 
     val imageVisible = remember { mutableStateListOf(false, false, false) }
     val borderColour =remember {mutableStateListOf(0, 0, 0)}
@@ -288,7 +338,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                     alphaRulette=alphaRuletteDisabled
                     if(winCount>0) winCount--
                     alphaCoin1 = 1f
-                    imageLittleCoin=R.drawable.light
+                    imageLittleCoin=R.drawable.fire_coin2
                     for(x in 0 .. quantityOfButtons-1){
                         imageVisible.set(x, true)
                     }
@@ -319,6 +369,9 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
         mutableStateOf(0f)
     }
 
+    var flashValue by remember {
+        mutableStateOf(0f)
+    }
     var number by remember{
           mutableStateOf(0)
     }
@@ -377,16 +430,65 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
            
         }
     )
-    if(winCount==5){
+
+    val flashState: Float by animateFloatAsState(
+        targetValue = flashValue,
+        animationSpec = tween(
+            durationMillis = 2000,
+            easing = LinearOutSlowInEasing
+        ),
+        finishedListener = {
+
+        }
+    )
+
+    val color by infiniteTransition.animateColor(
+        initialValue = Color.Red,
+        targetValue = Color(0xff800000), // Dark Red
+        animationSpec = infiniteRepeatable(
+            // Linearly interpolate between initialValue and targetValue every 1000ms.
+            animation = tween(1000, easing = LinearEasing),
+            // Once [TargetValue] is reached, starts the next iteration in reverse (i.e. from
+            // TargetValue to InitialValue). Then again from InitialValue to TargetValue. This
+            // [RepeatMode] ensures that the animation value is *always continuous*.
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+
+    val animatedSize by animateDpAsState(
+        targetValue = 500.dp, animationSpec = tween(
+            durationMillis = 5000,
+            easing = LinearEasing
+        )
+    )
+    var isHeartBeating by remember { mutableStateOf(true) }
+    val heartScale:Float by animateFloatAsState(
+        animationSpec = tween(
+            durationMillis = 4000,
+            easing = LinearOutSlowInEasing
+        ),
+
+      //  targetValue = if (isHeartBeating) 1.2f else 1f,
+        targetValue =  1.2f,
+                finishedListener = {
+                    visibleWinImage=0f
+                    isHeartBeating=false
+                    Log.d("rul","heartScaleStop")
+        }
+    )
+
+    if(winCount==quantityOfWinCount){
      //   visibleCount=0f
         //    winCount=0
-        visibleWinImage=1f
-        isPlayingLottie=true
 
+      //  isPlayingLottie=true
+        visibleWinImage=1f
         sound?.play(2, 1F, 1F, 0, 0, 1F)
+
         buttonTextStart="Start new Game"
     }
-    Image(painter = painterResource(id = R.drawable.bg3),
+    Image(painter = painterResource(id = R.drawable.bg6),
         contentDescription = "bg",
         modifier= Modifier
             .fillMaxSize()
@@ -452,49 +554,58 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .fillMaxWidth(0.1f),
+                        .fillMaxWidth(0.1f)
+                    //  .background(Color.Red) ,
                     //horizontalAlignment = Alignment.CenterHorizontally
                     // horizontalArrangement = Arrangement.Center
                 ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
+                    /* Box(
+                       // contentAlignment = Alignment.Center,
                         modifier = Modifier
-                            .width(70.dp),
-
-                        ) {
-                        Column(
-                            modifier = Modifier
-                               // .background(color = Yellow)
-                                //.fillMaxWidth()
-                                .width(70.dp),
-                            //  .weight(1f),
-                            // horizontalArrangement = Arrangement.spacedBy(-30.dp)
+                        //    .width(100.dp),
+                            .fillMaxHeight()
 
                         ) {
 
-                            for (x in 1..winCount) {
-                                Image(
-                                    alignment = Alignment.Center,
-                                    painter = painterResource(id = R.drawable.coin3),
-                                    contentDescription = "coin",
-                                    modifier = Modifier
-                                        .padding(0.dp, 0.dp, 0.dp, 0.dp)
-                                        .width(70.dp)
-                                        .height(70.dp)
-                                        .alpha(1f)
+                    */
+                    Column(
+                        modifier = Modifier
+                            //  .background(color = Yellow)
+                            .fillMaxHeight(),
+                        //.fillMaxWidth()
+                        //   .width(100.dp),
+                        // .weight(1f),
+                        // horizontalArrangement = Arrangement.spacedBy(-30.dp)
+                        verticalArrangement = Arrangement.Top
+                    ) {
 
-                                )
-                            }
+                        for (x in 1..winCount) {
+                            Image(
+
+                                painter = painterResource(id = R.drawable.coin3),
+                                contentDescription = "coin",
+                                modifier = Modifier
+                                    .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                                    // .width(200.dp)
+                                    .height(70.dp)
+                                    //  .weight(0.2f)
+                                    .alpha(1f)
+                                //                .background(color = White)
+
+                            )
                         }
                     }
+                    //}
                 }
+             //   Row(){
                 Box(
+                    // interactionSource = remember { NoRippleInteractionSource() },
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxSize()
                         .clickable {
                             if (!isButtonStartEnabled) return@clickable
-                            if (winCount == 5) {
+                            if (winCount == quantityOfWinCount) {
                                 visibleCount = 0f
                                 winCount = 0
                             }
@@ -514,7 +625,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                             alphaStartButton = alphaDisabled
                             isButtonsEnabled = false
                             alphaButtons = alphaDisabled
-                            alphaRulette=1f
+                            alphaRulette = 1f
                             isButtonStartEnabled = false
                             songId = -1
 
@@ -527,6 +638,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
 
                         }
                 ) {
+
                     Image(
                         //painter= painterResource(id = R.drawable.lucky_wheel_bg),
                         painter = painterResource(id = R.drawable.external_rul8),
@@ -534,12 +646,12 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(5.dp)
-                          //  .rotate(angle)
+                            //  .rotate(angle)
                             .alpha(alphaRulette)
                     )
                     Image(
                         //painter= painterResource(id = R.drawable.lucky_wheel_bg),
-                        painter = painterResource(id = R.drawable.internal_rul8),
+                        painter = painterResource(id = R.drawable.internal_rul9),
                         contentDescription = "arrow",
                         modifier = Modifier
                             .fillMaxSize()
@@ -547,19 +659,47 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                             .rotate(angle)
                             .alpha(alphaRulette)
                     )
-                   /* Image(
-                        //painter= painterResource(id = R.drawable.lucky_wheel_bg),
-                        painter = painterResource(id = R.drawable.title_click3),
-                        contentDescription = "arrow",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(5.dp)
-                            .alpha(alphaStartButton)
-                        //   .rotate(angle)
-                    )
-                   */
-                }
+                    if (visibleWinImage == 0f) {
+                        Image(
+                            //painter= painterResource(id = R.drawable.lucky_wheel_bg),
+                            painter = painterResource(id = R.drawable.btn_spin3),
 
+                            contentDescription = "arrow",
+                            colorFilter = ColorFilter.tint(color),
+                            //tint=color,
+                            modifier = Modifier
+                                .fillMaxSize()
+
+                                .padding(5.dp)
+                                .alpha(alphaStartButton)
+
+                            //    .scale(heartbeatAnimation)
+                            //    .background(Color.Cyan.copy(flashAnimation))
+                            //   .rotate(angle)
+                        )
+                    }
+                  /* AnimatedVisibility(
+                        visible = true,
+                        enter = fadeIn(animationSpec = tween(1000)),
+                        exit = fadeOut(animationSpec = tween(1000))
+                    ) { */
+                        Image(
+                            //painter= painterResource(id = R.drawable.lucky_wheel_bg),
+                            painter = painterResource(id = R.drawable.crown),
+                            contentDescription = "crown",
+
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(5.dp)
+                                .alpha(visibleWinImage)
+                            //   .scale(heartbeatAnimation)
+                            // .scale(heartScale),
+                            // .background(Color.Cyan.copy(flashAnimation))
+                            //   .rotate(angle)
+                        )
+                    //}
+                }
+            //}
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
@@ -650,53 +790,72 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                             if (songId == listUtilSongs.get(x).id) {
                                 winCount++;
                              //   borderColour.set(x, 1)
-                                imageLittleCoin = R.drawable.funny_sun
+                                imageLittleCoin = R.drawable.coin3
                                 sound?.play(3, volumeCoin, volumeCoin, 0, 0, 1F)
 
                             } else {
                                 if (winCount > 0) winCount--
                             //    borderColour.set(x, 2)
-                                imageLittleCoin = R.drawable.light
+                                imageLittleCoin = R.drawable.fire_coin2
                                 sound?.play(4, volumeCoin, volumeCoin, 0, 0, 1F)
 
                             }
                         },
                             contentAlignment = Alignment.CenterStart,
                 ) {
-                    var cloud:Int=R.drawable.button0
-                   if(x==1) cloud=R.drawable.button2
-                    else if(x==2) cloud=R.drawable.button4
+                    var cloud: Int = R.drawable.button0
+                    if (x == 1) cloud = R.drawable.button2
+                    else if (x == 2) cloud = R.drawable.button4
 
                     Image(
                         //painter= painterResource(id = R.drawable.lucky_wheel_bg),
                         painter = painterResource(id = cloud),
-                        contentDescription = "cloud",
+                        contentDescription = "count",
                         contentScale = ContentScale.FillBounds,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(5.dp)
-                          //  .rotate(angle)
-                          //  .alpha(alphaRulette)
+                        //  .rotate(angle)
+                        //  .alpha(alphaRulette)
                     )
-                    var buttonText = ""
-                    if (!listUtilSongs.isEmpty()) {
-                        buttonText = listUtilSongs.get(x).name
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        AnimatedVisibility(
+                            visible = imageVisible.get(x),
+                            enter = fadeIn(animationSpec = tween(1000)),
+                            exit = fadeOut(animationSpec = tween(1000))
+                        ) {
+                            Image(
+                                alignment = Alignment.Center,
+                                painter = painterResource(id = imageLittleCoin),
+                                contentDescription = "coin",
+                                modifier = Modifier
+                                    .padding(15.dp, 0.dp, 0.dp, 0.dp)
+                                    .width(50.dp)
+                                    .height(50.dp)
+                                    .alpha(alphaCoin1)
+
+                            )
+                        }
+                        var buttonText = ""
+                        if (!listUtilSongs.isEmpty()) {
+                            buttonText = listUtilSongs.get(x).name
+                        }
+                        Text(
+                            text = buttonText,
+                            textAlign = TextAlign.Center,
+                            //fontFamily = FontFamily.Serif,
+                            fontFamily = irishGroverFontFamily,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = White,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentWidth()
+                                .padding(15.dp, 5.dp)
+                                //   .background(color = Yellow)
+                                .wrapContentHeight(align = Alignment.CenterVertically),
+                        )
                     }
-                    Text(
-                        text = buttonText,
-                        textAlign = TextAlign.Center,
-                        //fontFamily = FontFamily.Serif,
-                        fontFamily = irishGroverFontFamily,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = White,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentWidth()
-                            .padding(15.dp, 5.dp)
-                         //   .background(color = Yellow)
-                            .wrapContentHeight(align = Alignment.CenterVertically),
-                    )
                 }
                 /*Card(
 
