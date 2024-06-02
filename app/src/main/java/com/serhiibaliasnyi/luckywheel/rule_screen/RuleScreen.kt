@@ -662,7 +662,7 @@ fun RuleScreen(sound: SoundPool?, composition:LottieComposition?, player: ExoPla
                     if (visibleWinImage == 0f) {
                         Image(
                             //painter= painterResource(id = R.drawable.lucky_wheel_bg),
-                            painter = painterResource(id = R.drawable.btn_spin3),
+                            painter = painterResource(id = R.drawable.btn_spin4),
 
                             contentDescription = "arrow",
                             colorFilter = ColorFilter.tint(color),
