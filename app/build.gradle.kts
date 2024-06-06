@@ -11,13 +11,14 @@ android {
         applicationId = "com.serhiibaliasnyi.luckywheel"
         minSdk = 24
         targetSdk = 34
-        versionCode = 12
-        versionName = "12"
+        versionCode = 20
+        versionName = "20"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
+
     }
 
     buildTypes {
@@ -40,7 +41,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.1" //1.5.1
     }
     packaging {
         resources {
@@ -54,7 +55,7 @@ dependencies {
     //implementation ("androidx.media3:media3-exoplayer:1.1.1")
     implementation("androidx.media3:media3-ui:1.3.0")
 
-    implementation("com.airbnb.android:lottie-compose:6.1.0")
+   // implementation("com.airbnb.android:lottie-compose:6.1.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
