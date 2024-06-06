@@ -326,7 +326,7 @@ class MainActivity : ComponentActivity() {
                 name = "One Potato Two Potato",
                 cover = "image45",
                 music = R.raw.track45
-            ), /*
+            ),
             Music(
                 id=46,
                 name = "Miss Polly Had a Dolly",
@@ -356,7 +356,7 @@ class MainActivity : ComponentActivity() {
                 name = "Mary Had a Little Lamb",
                 cover = "image50",
                 music = R.raw.track50
-            ) */
+            )
         )
     }
 
