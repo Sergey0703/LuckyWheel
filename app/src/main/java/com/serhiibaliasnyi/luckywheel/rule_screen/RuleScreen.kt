@@ -787,7 +787,7 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                         }
                     }
 
-                    if(toggleState.value ==0 && toggleState.value ==1) {
+                    if(toggleState.value ==0 || toggleState.value ==1) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             AnimatedVisibility(
                                 visible = imageVisible.get(x),
