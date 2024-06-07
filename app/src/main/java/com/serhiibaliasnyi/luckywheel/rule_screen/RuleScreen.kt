@@ -17,6 +17,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -59,8 +60,13 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.Blue
+import androidx.compose.ui.graphics.Color.Companion.Green
+import androidx.compose.ui.graphics.Color.Companion.Magenta
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -89,15 +95,8 @@ import kotlinx.coroutines.launch
 import java.util.Collections
 import kotlin.time.Duration.Companion.seconds
 
-/*class NoRippleInteractionSource : MutableInteractionSource {
 
-    override val interactions: Flow<Interaction> = emptyFlow()
 
-    override suspend fun emit(interaction: Interaction) {}
-
-    override fun tryEmit(interaction: Interaction) = true
-} */
-//@OptIn(ExperimentalMaterial3Api::class)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity.Music>) {
@@ -407,7 +406,7 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
         }
     )
 
-    val flashState: Float by animateFloatAsState(
+ /*   val flashState: Float by animateFloatAsState(
         targetValue = flashValue,
         animationSpec = tween(
             durationMillis = 4000,
@@ -422,11 +421,12 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
             for (x in 0..quantityOfButtons.value - 1) {
                 imageVisible.set(x, false)
             }
+            totalWinCount.value++
             listUtilSongs.clear()
            //    alphaCoin1 = 0f
 
         }
-    )
+    ) */
 
     val color by infiniteTransition.animateColor(
         initialValue = Red,
@@ -458,10 +458,24 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
     )
 */
     if(winCount.value==quantityOfWinCount){
+        winCount.value=0
         winVisible=true
         visibleWinImage = 1f
-        flashValue = 1f
+       // flashValue = 1f
         sound?.play(2, 1F, 1F, 0, 0, 1F)
+        coroutineScope.launch {
+            for(n in 1..3){
+                delay(1000)
+            }
+            winVisible = false
+            visibleWinImage=0f
+            for (x in 0..quantityOfButtons.value - 1) {
+                imageVisible.set(x, false)
+            }
+            totalWinCount.value++
+            listUtilSongs.clear()
+        }
+       // totalWinCount.value++
     }
     Image(painter = painterResource(id = R.drawable.bg6),
         contentDescription = "bg",
@@ -478,71 +492,60 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
 
         Column(
             modifier = Modifier
+               // .background(Black)
                 .fillMaxHeight()
                 .fillMaxWidth(0.6f),
-            horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally
            // horizontalArrangement = Arrangement.Center
         ) {
-/*
-            Box(
-                modifier = Modifier
-                    .background(color = White)
-                    .fillMaxWidth(),
-
-                  //  .weight(1f),
-
-             contentAlignment = Alignment.Center,
-
-                ) {
-
-                Image(
-            //        alignment = Alignment.Center,
-                    painter = painterResource(id = R.drawable.crown),
-                    contentDescription = "crown",
-                    modifier = Modifier
-                        .padding(0.dp, 2.dp, 0.dp, 0.dp)
-                        .width(120.dp)
-                        .height(120.dp)
-                        .alpha(visibleWinImage)
-
-                )
-
-                Text(
-                    modifier = Modifier
-                        //.fillMaxWidth()
-                        .height(0.dp)
-                        .padding(0.dp, 0.dp, 0.dp, 0.dp)
-                        // .wrapContentWidth()
-                        // .wrapContentHeight()
-
-                        // .alpha(visibleCount),
-                        .alpha(0f),
-                    textAlign = TextAlign.Center,
-                    text = winCount.toString(),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 35.sp,
-                    color = Color.White
-                )
-
-            } */
-            Row() {
+            Row(modifier = Modifier
+                 // .background(Blue)
+                .fillMaxHeight(0.1f)
+                .fillMaxWidth()) {
+            Text( modifier=Modifier
+               //  .background(Blue)
+                .fillMaxWidth(0.25f),
+                text = "Player 1",
+                textAlign = TextAlign.Left,
+                //fontFamily = FontFamily.Serif,
+                fontFamily = irishGroverFontFamily,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = White,
+            )
+              Row(modifier=Modifier
+                //  .background(White)
+                  .fillMaxWidth(0.68f),
+                 horizontalArrangement = Arrangement.Center
+                  ){
+                  for (x in 1..totalWinCount.value) {
+                      Image(
+                          painter = painterResource(id = R.drawable.crown),
+                          contentDescription = "coin",
+                          modifier = Modifier
+                              .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                              // .width(200.dp)
+                              .height(100.dp)
+                              //  .weight(0.2f)
+                              .alpha(1f)
+                      )
+                  }
+              }
+            }
+            Row(modifier = Modifier
+              //  .background(Blue)
+                .fillMaxHeight()
+                .fillMaxWidth()) {
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
+                        //.weight(0.1f)
                         .fillMaxWidth(0.1f)
-                    //  .background(Color.Red) ,
+                      //  .background(Color.Red)
                     //horizontalAlignment = Alignment.CenterHorizontally
                     // horizontalArrangement = Arrangement.Center
                 ) {
-                    /* Box(
-                       // contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                        //    .width(100.dp),
-                            .fillMaxHeight()
 
-                        ) {
-
-                    */
                     Column(
                         modifier = Modifier
                             //  .background(color = Yellow)
@@ -562,129 +565,132 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                                 modifier = Modifier
                                     .padding(0.dp, 0.dp, 0.dp, 0.dp)
                                     // .width(200.dp)
-                                    .height(70.dp)
+                                    .height(60.dp)
                                     //  .weight(0.2f)
                                     .alpha(1f)
-                                )
+                            )
                         }
                     }
                     //}
-                }
 
-                Box(
-                    // interactionSource = remember { NoRippleInteractionSource() },
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxSize()
-                        .clickable {
-                            if (!isButtonStartEnabled) return@clickable
-                            if( winVisible==true) return@clickable
-                            if (winCount.value == quantityOfWinCount) {
-                                visibleCount = 0f
-                                winCount.value = 0
-                            }
 
-                            visibleCount = 1f
-                            visibleWinImage = 0f
-                            flashValue=0f
-                            winVisible=false
-                            listUtilSongs.clear()
-                           // for (x in 0..quantityOfButtons.value - 1) {
-                            for (x in 0..3) {
-                                imageVisible.set(x, false)
-                            }
-                          //  for (x in 0..quantityOfButtons.value - 1) {
-                          //      borderColour.set(x, 0)
-                          //  }
-                           // alphaCoin1 = 0f
-                          //  buttonTextStart = ""
-                          //  alphaStartButton = alphaDisabled
-                            isButtonsEnabled = false
-                         //555   alphaButtons = alphaDisabled
-                        //555    alphaRulette = 1f
-                            isButtonStartEnabled = false
-                            songId = -1
+                } //0.1f
 
-                            initSongs(playListShuffle, quantityOfSectors, playList, player)
-                            //Log.d("rul","playListShuffleButton="+playListShuffle)
-                          //  isPlayingLottie = false
-                            rotationValue = ((0..360).random().toFloat() + 720) + angle
-                            //   Log.d("rul", "angle="+(angle%360).toString() +" rotationValue "+rotationValue.toString())
-                            sound?.play(1, 1F, 1F, 0, 0, 1F)
 
-                        }
-                ) {
 
-                    Image(
-                        //painter= painterResource(id = R.drawable.lucky_wheel_bg),
-                        painter = painterResource(id = R.drawable.external_rul8),
-                        contentDescription = "lucky wheel",
+                    Box(
+                        // interactionSource = remember { NoRippleInteractionSource() },
                         modifier = Modifier
+                            //.background(Green)
+                            .weight(1f)
                             .fillMaxSize()
-                            .padding(5.dp)
-                            //  .rotate(angle)
-                          //555  .alpha(alphaRulette)
-                    )
-                    Image(
-                        //painter= painterResource(id = R.drawable.lucky_wheel_bg),
-                        painter = painterResource(id = R.drawable.internal_rul9),
-                        contentDescription = "arrow",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(5.dp)
-                            .rotate(angle)
-                        //555    .alpha(alphaRulette)
-                    )
-                    if (isButtonStartEnabled && visibleWinImage == 0f) {
-                        Image(
-                            painter = painterResource(id = R.drawable.btn_spin4),
-                            contentDescription = "arrow",
-                            colorFilter = ColorFilter.tint(color),
-                            //tint=color,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(5.dp)
-                            //  .alpha(alphaStartButton)
-                            //    .scale(heartbeatAnimation)
-                            //    .background(Color.Cyan.copy(flashAnimation))
-                            //   .rotate(angle)
-                        )
-                    }
-                    Row(){
+                            .clickable {
+                                if (!isButtonStartEnabled) return@clickable
+                                if (winVisible == true) return@clickable
+                                if (winCount.value == quantityOfWinCount) {
+                                    visibleCount = 0f
+                                    winCount.value = 0
+                                }
 
+                                visibleCount = 1f
+                                visibleWinImage = 0f
+                                flashValue = 0f
+                                winVisible = false
+                                listUtilSongs.clear()
+                                // for (x in 0..quantityOfButtons.value - 1) {
+                                for (x in 0..3) {
+                                    imageVisible.set(x, false)
+                                }
+                                //  for (x in 0..quantityOfButtons.value - 1) {
+                                //      borderColour.set(x, 0)
+                                //  }
+                                // alphaCoin1 = 0f
+                                //  buttonTextStart = ""
+                                //  alphaStartButton = alphaDisabled
+                                isButtonsEnabled = false
+                                //555   alphaButtons = alphaDisabled
+                                //555    alphaRulette = 1f
+                                isButtonStartEnabled = false
+                                songId = -1
 
-                 /* AnimatedVisibility(
-                        visible = winVisible,
-                        enter = fadeIn(animationSpec = tween(2000)),
-                        exit = fadeOut(animationSpec = tween(1))
-                    ) {*/
-                        if (visibleWinImage == 1f) {
-                        //    flashValue=1f
+                                initSongs(playListShuffle, quantityOfSectors, playList, player)
+                                //Log.d("rul","playListShuffleButton="+playListShuffle)
+                                //  isPlayingLottie = false
+                                rotationValue = ((0..360).random().toFloat() + 720) + angle
+                                //   Log.d("rul", "angle="+(angle%360).toString() +" rotationValue "+rotationValue.toString())
+                                sound?.play(1, 1F, 1F, 0, 0, 1F)
+
+                            }
+                    ) {
+
                         Image(
                             //painter= painterResource(id = R.drawable.lucky_wheel_bg),
-                            painter = painterResource(id = R.drawable.crown),
-                            contentDescription = "crown",
-
+                            painter = painterResource(id = R.drawable.external_rul8),
+                            contentDescription = "lucky wheel",
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(5.dp)
-                                .alpha(visibleWinImage)
-                             //   .alpha(flashState)
-                            //   .scale(heartbeatAnimation)
-                                .scale(1.4f),
-                            // .background(Color.Cyan.copy(flashAnimation))
-                            //   .rotate(angle)
+                            //  .rotate(angle)
+                            //555  .alpha(alphaRulette)
                         )
-                      // if (this.transition.currentState == this.transition.targetState){
-                         //  Log.d("rul","Ok!!!!!!!!!!")
-                         //   winVisible=false
-                         //  visibleWinImage=0f
-                     //  }
+                        Image(
+                            //painter= painterResource(id = R.drawable.lucky_wheel_bg),
+                            painter = painterResource(id = R.drawable.internal_rul9),
+                            contentDescription = "arrow",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(5.dp)
+                                .rotate(angle)
+                            //555    .alpha(alphaRulette)
+                        )
+                        if (isButtonStartEnabled && visibleWinImage == 0f) {
+                            Image(
+                                painter = painterResource(id = R.drawable.btn_spin4),
+                                contentDescription = "arrow",
+                                colorFilter = ColorFilter.tint(color),
+                                //tint=color,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(5.dp)
+                                //  .alpha(alphaStartButton)
+                                //    .scale(heartbeatAnimation)
+                                //    .background(Color.Cyan.copy(flashAnimation))
+                                //   .rotate(angle)
+                            )
+                        }
+                        Row() {
+
+                            if (visibleWinImage == 1f) {
+                                //    flashValue=1f
+                                Image(
+                                    //painter= painterResource(id = R.drawable.lucky_wheel_bg),
+                                    painter = painterResource(id = R.drawable.crown),
+                                    contentDescription = "crown",
+
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(5.dp)
+                                        .alpha(visibleWinImage)
+                                        //   .alpha(flashState)
+                                        //   .scale(heartbeatAnimation)
+                                        .scale(1.4f),
+                                    // .background(Color.Cyan.copy(flashAnimation))
+                                    //   .rotate(angle)
+                                )
+                                // if (this.transition.currentState == this.transition.targetState){
+                                //  Log.d("rul","Ok!!!!!!!!!!")
+                                //   winVisible=false
+                                //  visibleWinImage=0f
+                                //  }
+                            }
+                        }
                     }
-                }
-            }
+            //    }
+            //}
+            //Box
                 Column(
                     modifier = Modifier
+                      //  .background(Magenta)
                         .padding(0.dp,0.dp,0.dp,20.dp)
                         .fillMaxHeight()
                         .fillMaxWidth(0.1f)
@@ -694,8 +700,11 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                     // horizontalArrangement = Arrangement.Center
                 ) {
                  ToggleMode(toggleState, quantityOfButtons)
+
                 }
-            }
+            }//0000
+
+
 //========================================================
             /*
             LinearProgressIndicator(
