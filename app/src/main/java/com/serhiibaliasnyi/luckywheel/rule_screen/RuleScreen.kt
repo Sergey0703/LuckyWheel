@@ -55,10 +55,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Blue
@@ -70,12 +72,16 @@ import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+//import androidx.compose.ui.tooling.data.EmptyGroup.box
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+//import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -97,10 +103,12 @@ import kotlin.time.Duration.Companion.seconds
 
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity.Music>) {
-    val quantityOfSectors:Int=8
+    val quantityOfSectors:Int=40
 
     var quantityOfButtons = remember {
         mutableStateOf(3)
@@ -108,10 +116,7 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
     val quantityOfWinCount:Int =5
 
     val musicDurationMs=10000;
-   // val alphaDisabled=0.0f
-   // val alphaRuletteDisabled=1f
 
-    val strokeWidth=3.dp;
     val volumeCoin=1f
     val infiniteTransition = rememberInfiniteTransition()
     val coroutineScope = rememberCoroutineScope()
@@ -148,8 +153,8 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
 
     //var currentProgress by remember { mutableStateOf(0f) }
     //var loading by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope() // Create a coroutine scope
-    val taskVeriable = remember {mutableStateOf("Hello World")}
+  //  val scope = rememberCoroutineScope() // Create a coroutine scope
+  //  val taskVeriable = remember {mutableStateOf("Hello World")}
 
     var toggleState = remember {
         mutableStateOf(0)
@@ -157,42 +162,13 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
     var imageLittleCoin:MutableState<Int> = remember {
         mutableStateOf(0)
     }
-/*    var imageVisible1 by remember {
-        mutableStateOf(false)
-    }
-    var imageVisible2 by remember {
-        mutableStateOf(false)
-    }
 
-    var imageVisible3 by remember {
-        mutableStateOf(false)
-    }  */
-  /*  var alphaCoin1 by remember {
-        mutableStateOf(1f)
-    }
-    var alphaCoin2 by remember {
-        mutableStateOf(1f)
-    }
-    var alphaCoin3 by remember {
-        mutableStateOf(1f)
-    }
-   */
     var visibleCount by remember{
         mutableStateOf(1f)
     }
     var visibleWinImage by remember{
         mutableStateOf(0f)
     }
-  /*  var alphaStartButton:Float by remember {
-         mutableStateOf(1f)
-     } */
-
-  /*  var alphaRulette:Float by remember {
-        mutableStateOf(alphaRuletteDisabled)
-    }*/
-  /*  var alphaButtons:Float by remember {
-        mutableStateOf(alphaDisabled)
-    } */
 
     var playListShuffle:MutableList<MainActivity.Music> = remember{
         mutableStateListOf<MainActivity.Music>()
@@ -213,18 +189,7 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
     var totalWinCount = remember{
         mutableStateOf(0)
     }
-    /*var borderColour1:Int by remember {
-        mutableStateOf(0)
-    }
-    var borderColour2:Int by remember {
-        mutableStateOf(0)
-    }
-    var borderColour3:Int by remember {
-        mutableStateOf(0)
-    }
-    var buttonTextStart:String by remember {
-        mutableStateOf("Start")
-    }  */
+
     var isButtonStartEnabled:Boolean by remember{
         mutableStateOf(true)
     }
@@ -280,15 +245,6 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
         */
     }
 
-   // val currentPosition by remember {
-   //     mutableLongStateOf(0)
-   // }
-
-   // val totalDuration by remember {
-   //     mutableLongStateOf(0)
-   // }
-
-
 
     DisposableEffect(Unit) {
         val listener = object : Player.Listener {
@@ -310,13 +266,10 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                     player.pause()
                     Log.d("rul", "pause="+currentValue.toString())
                     currentValue =0;
-                //    sliderPosition.longValue=0
+                    sliderPosition.longValue=0
                     isButtonStartEnabled=true
                     isButtonsEnabled=false
-                 //   buttonTextStart="Start"
-                 //88   alphaStartButton=1f
-                 //55   alphaButtons=alphaDisabled
-                 //55   alphaRulette=alphaRuletteDisabled
+
                     if(winCount.value>0) winCount.value--
                     //alphaCoin1 = 1f
                     imageLittleCoin.value=R.drawable.fire_coin2
@@ -332,11 +285,7 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                             listUtilSongs.clear()
                         }
                     }
-                  //  currentPosition.longValue = 0
-                //    if (player.isPlaying) {
-                //    player.seekToNextMediaItem()
-                 //   currentValue=0;
-                 //   }
+
                 }
                 delay(1.seconds/10 )
                 Log.d("rul", "play="+currentValue.toString())
@@ -406,27 +355,6 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
         }
     )
 
- /*   val flashState: Float by animateFloatAsState(
-        targetValue = flashValue,
-        animationSpec = tween(
-            durationMillis = 4000,
-            easing = LinearOutSlowInEasing
-        ),
-        finishedListener = {
-                winCount.value=0
-                flashValue = 0f
-                Log.d("rul", "finish")
-                winVisible = false
-                visibleWinImage=0f
-            for (x in 0..quantityOfButtons.value - 1) {
-                imageVisible.set(x, false)
-            }
-            totalWinCount.value++
-            listUtilSongs.clear()
-           //    alphaCoin1 = 0f
-
-        }
-    ) */
 
     val color by infiniteTransition.animateColor(
         initialValue = Red,
@@ -492,14 +420,14 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
 
         Column(
             modifier = Modifier
-               // .background(Black)
+                // .background(Black)
                 .fillMaxHeight()
                 .fillMaxWidth(0.6f),
                 horizontalAlignment = Alignment.CenterHorizontally
            // horizontalArrangement = Arrangement.Center
         ) {
             Row(modifier = Modifier
-                 // .background(Blue)
+                // .background(Blue)
                 .fillMaxHeight(0.1f)
                 .fillMaxWidth()) {
             Text( modifier=Modifier
@@ -533,7 +461,7 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
               }
             }
             Row(modifier = Modifier
-              //  .background(Blue)
+                //  .background(Blue)
                 .fillMaxHeight()
                 .fillMaxWidth()) {
                 Column(
@@ -591,12 +519,13 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                                     visibleCount = 0f
                                     winCount.value = 0
                                 }
-
+                                sliderPosition.longValue=0
                                 visibleCount = 1f
                                 visibleWinImage = 0f
                                 flashValue = 0f
                                 winVisible = false
                                 listUtilSongs.clear()
+
                                 // for (x in 0..quantityOfButtons.value - 1) {
                                 for (x in 0..3) {
                                     imageVisible.set(x, false)
@@ -616,7 +545,9 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                                 initSongs(playListShuffle, quantityOfSectors, playList, player)
                                 //Log.d("rul","playListShuffleButton="+playListShuffle)
                                 //  isPlayingLottie = false
-                                rotationValue = ((0..360).random().toFloat() + 720) + angle
+                                rotationValue = ((0..360)
+                                    .random()
+                                    .toFloat() + 720) + angle
                                 //   Log.d("rul", "angle="+(angle%360).toString() +" rotationValue "+rotationValue.toString())
                                 sound?.play(1, 1F, 1F, 0, 0, 1F)
 
@@ -690,8 +621,8 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
             //Box
                 Column(
                     modifier = Modifier
-                      //  .background(Magenta)
-                        .padding(0.dp,0.dp,0.dp,20.dp)
+                        //  .background(Magenta)
+                        .padding(0.dp, 0.dp, 0.dp, 20.dp)
                         .fillMaxHeight()
                         .fillMaxWidth(0.1f)
                         .alpha(0.8f),
@@ -702,8 +633,9 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                  ToggleMode(toggleState, quantityOfButtons)
 
                 }
-            }//0000
 
+            }//0000
+            //ToggleModeRow(toggleState , quantityOfButtons)
 
 //========================================================
             /*
@@ -730,7 +662,7 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
             // .fillMaxHeight()
             // .fillMaxWidth(0.6f)
         ) {
-            for (x in 0..quantityOfButtons.value-1) {
+            for (x in 0..2) {
 
                 Box(
                     contentAlignment = Alignment.CenterStart,
@@ -740,36 +672,22 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                         .clickable {
                             //onClick: ()->Unit
                             if (!isButtonsEnabled) return@clickable
-                            isButtonStartEnabled= true
+                            isButtonStartEnabled = true
                             isButtonsEnabled = false
 
-                            choiceSong(x, songId,volumeCoin, sound,
-                            imageLittleCoin,winCount, listUtilSongs,
-                            imageVisible,
-                            sliderPosition,player )
+                            choiceSong(
+                                x, songId, volumeCoin, sound,
+                                imageLittleCoin, winCount, listUtilSongs,
+                                imageVisible,
+                                sliderPosition, player
+                            )
 
-                        /*    sliderPosition.longValue=0;
-                              player.pause()
-                          //77  currentValue = 0;
-                          //88   alphaStartButton= 1f
-                          //555  alphaButtons = alphaDisabled
-                            imageVisible.set(x, true)
-                          // alphaCoin1 = 1f
-                            if (songId == listUtilSongs.get(x).id) {
-                                winCount++;
-                                imageLittleCoin = R.drawable.coin3
-                                sound?.play(3, volumeCoin, volumeCoin, 0, 0, 1F)
-                            } else {
-                                if (winCount > 0) winCount--
-                                imageLittleCoin = R.drawable.fire_coin2
-                                sound?.play(4, volumeCoin, volumeCoin, 0, 0, 1F)
-                            } */
-                        },
+                         },
 
                 ) {
-                    var buttonText = ""
 
-                    if(toggleState.value ==0) {
+
+               //     if(toggleState.value ==0) {
                         var cloud: Int = R.drawable.button0
                         if (x == 1) cloud = R.drawable.button2
                         else if (x == 2) cloud = R.drawable.button4
@@ -781,21 +699,22 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                             contentScale = ContentScale.FillBounds,
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(5.dp)
+                                .padding(2.dp)
                             //  .rotate(angle)
                             //  .alpha(alphaRulette)
                         )
-                        if (!listUtilSongs.isEmpty()) {
-                                buttonText = listUtilSongs.get(x).name
-                        }
-                    }else if(toggleState.value ==1) {
+
+                    if(toggleState.value ==1) {
                         var buttonImage: String = ""
                         if (!listUtilSongs.isEmpty()) {
                             buttonImage = listUtilSongs.get(x).cover
                             AssetImage(buttonImage.toString())
                         }
                     }
-
+                    var buttonText = ""
+                    if (!listUtilSongs.isEmpty() && toggleState.value ==0) {
+                        buttonText = listUtilSongs.get(x).name
+                    }
                     if(toggleState.value ==0 || toggleState.value ==1) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             AnimatedVisibility(
@@ -852,171 +771,69 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
        // for (x in 0..quantityOfButtons - 1) {
 
         if ( toggleState.value ==2 && !listUtilSongs.isEmpty() ) {
-            Column(modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(0.5f)
-              //  .background(Red)
-            ) {
-                Box(modifier= Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.5f)
-                    .clickable {
-                        if (!isButtonsEnabled) return@clickable
-                        isButtonStartEnabled= true
-                        isButtonsEnabled = false
+       // val (settingsImage, settingsText, darkModeButton) = createRefs()
 
-                            choiceSong(0, songId,volumeCoin, sound,
-                            imageLittleCoin,winCount, listUtilSongs,
-                            imageVisible,
-                            sliderPosition,player )
+       ConstraintLayout {
+           val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+           var (box, box1, box2, box3, box4) = createRefs()
+           for(x in 0..3) {
+           if(x==0) box=box1
+           if(x==1) box=box2
+           if(x==2) box=box3
+           if(x==3) box=box4
+           Box(
+                   modifier = Modifier
+                       .fillMaxWidth(0.5f)
+                       .fillMaxHeight(0.5f)
+                       .clickable {
+                           if (!isButtonsEnabled) return@clickable
+                           isButtonStartEnabled = true
+                           isButtonsEnabled = false
+                           sliderPosition.longValue=0
+                           choiceSong(
+                               x, songId, volumeCoin, sound,
+                               imageLittleCoin, winCount, listUtilSongs,
+                               imageVisible,
+                               sliderPosition, player
+                           )
 
                            coroutineScope.launch {
-                            for(n in 1..2){
-                                delay(1000)
-                            }
-                            listUtilSongs.clear()
-                        }
-
-                    }
-                ) {
-                       AssetImage(listUtilSongs.get(0).cover)
-                      // Row(verticalAlignment = Alignment.CenterVertically) {
-                           /*   AnimatedVisibility(
-                            visible = true,
-                            enter = fadeIn(animationSpec = tween(1000)),
-                            exit = fadeOut(animationSpec = tween(1))
-                        ) {  */
-                           if (imageVisible.get(0)) {
-                               Image(
-                                   alignment = Alignment.Center,
-                                   painter = painterResource(id = imageLittleCoin.value),
-                                   contentDescription = "coin",
-                                   modifier = Modifier
-                                       .padding(15.dp, 0.dp, 0.dp, 0.dp)
-                                       .width(50.dp)
-                                       .height(50.dp)
-                                   //   .alpha(alphaCoin1)
-
-                               )
+                               for (n in 1..1) {
+                                   delay(1000)
+                               }
+                               listUtilSongs.clear()
                            }
-                       //}
-                 }
-                Box(modifier= Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .clickable {
-                        if (!isButtonsEnabled) return@clickable
-                        isButtonStartEnabled= true
-                        isButtonsEnabled = false
 
-                        choiceSong(2, songId,volumeCoin, sound,
-                            imageLittleCoin,winCount, listUtilSongs,
-                            imageVisible,
-                            sliderPosition,player )
-                        coroutineScope.launch {
-                            for(n in 1..2){
-                                delay(1000)
-                            }
-                            listUtilSongs.clear()
-                        }
-                    }
-                ) {
-
-                    AssetImage(listUtilSongs.get(2).cover)
-                    if (imageVisible.get(2)) {
-                        Image(
-                            alignment = Alignment.Center,
-                            painter = painterResource(id = imageLittleCoin.value),
-                            contentDescription = "coin",
-                            modifier = Modifier
-                                .padding(15.dp, 0.dp, 0.dp, 0.dp)
-                                .width(50.dp)
-                                .height(50.dp)
-                            //   .alpha(alphaCoin1)
-
-                        )
-                    }
-                }
-            }
-           Column(modifier= Modifier
-                  .fillMaxHeight()
-                  .fillMaxWidth()
-               // .background(White)
-           )
-           {
-               Box(modifier= Modifier
-                   .fillMaxWidth()
-                   .fillMaxHeight(0.5f)
-                   .clickable {
-                       if (!isButtonsEnabled) return@clickable
-                       isButtonStartEnabled= true
-                       isButtonsEnabled = false
-
-                       choiceSong(1, songId,volumeCoin, sound,
-                           imageLittleCoin,winCount, listUtilSongs,
-                           imageVisible,
-                           sliderPosition,player )
-                       coroutineScope.launch {
-                           for(n in 1..2){
-                               delay(1000)
-                           }
-                           listUtilSongs.clear()
                        }
-                   }
-               ) {
-                   AssetImage(listUtilSongs.get(1).cover)
-                   if (imageVisible.get(1)) {
-                       Image(
-                           alignment = Alignment.Center,
-                           painter = painterResource(id = imageLittleCoin.value),
-                           contentDescription = "coin",
-                           modifier = Modifier
-                               .padding(15.dp, 0.dp, 0.dp, 0.dp)
-                               .width(50.dp)
-                               .height(50.dp)
-                           //   .alpha(alphaCoin1)
-
-                       )
-                   }
-               }
-               Box(modifier= Modifier
-                   .fillMaxWidth()
-                   .fillMaxHeight()
-                   .clickable {
-                       if (!isButtonsEnabled) return@clickable
-                       isButtonStartEnabled= true
-                       isButtonsEnabled = false
-
-                       choiceSong(3, songId,volumeCoin, sound,
-                           imageLittleCoin,winCount, listUtilSongs,
-                           imageVisible,
-                           sliderPosition,player )
-                       coroutineScope.launch {
-                           for(n in 1..2){
-                               delay(1000)
-                           }
-                           listUtilSongs.clear()
+                       .constrainAs(box) {
+                           if(x==0 || x==1)top.linkTo(parent.top) else top.linkTo(box1.bottom)
+                           if(x==0 || x==2) start.linkTo(parent.start)
+                           if(x==1) start.linkTo(box1.end)
+                           if(x==3) start.linkTo(box3.end)
                        }
-                   }
-               ) {
 
-                   AssetImage(listUtilSongs.get(3).cover)
-                   if (imageVisible.get(3)) {
-                       Image(
-                           alignment = Alignment.Center,
-                           painter = painterResource(id = imageLittleCoin.value),
-                           contentDescription = "coin",
-                           modifier = Modifier
-                               .padding(15.dp, 0.dp, 0.dp, 0.dp)
-                               .width(50.dp)
-                               .height(50.dp)
-                           //   .alpha(alphaCoin1)
 
-                       )
-                   }
+              ) {
+               AssetImage(listUtilSongs.get(x).cover)
+               if (imageVisible.get(x)) {
+                   Image(
+                       alignment = Alignment.Center,
+                       painter = painterResource(id = imageLittleCoin.value),
+                       contentDescription = "coin",
+                       modifier = Modifier
+                           .padding(15.dp, 0.dp, 0.dp, 0.dp)
+                           .width(50.dp)
+                           .height(50.dp)
+                       //   .alpha(alphaCoin1)
+
+                   )
                }
+              }
 
-                }
+
+       }
+   }
+
             }
         }
 
@@ -1039,10 +856,6 @@ fun choiceSong(x: Int,songId:Int,volumeCoin:Float, sound: SoundPool?,
        sliderPosition.longValue = 0;
        player.pause()
        //currentValue.longValue = 0;
-  //99  isButtonStartEnabled.value = true
-  //99  isButtonsEnabled.value = false
-       //88alphaStartButton.value = 1f
-       //555alphaRulette.value=alphaRuletteDisabled
 
       // alphaButtons.value = alphaDisabled
        imageVisible.set(x, true)
@@ -1091,7 +904,10 @@ fun AssetImage(trackName: String) {
         contentDescription = "",
         contentScale = ContentScale.FillWidth,
         alpha = imageAlpha,
-        modifier = Modifier.fillMaxSize().padding(1.dp).border(2.dp,White)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(1.dp)
+            .border(2.dp, White)
     )
 }
 fun  getUtilSongs(song : MainActivity.Music,list:List<MainActivity.Music> ): MutableList<MainActivity.Music> {
