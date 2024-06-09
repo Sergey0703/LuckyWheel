@@ -426,9 +426,11 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                 horizontalAlignment = Alignment.CenterHorizontally
            // horizontalArrangement = Arrangement.Center
         ) {
+            //top Row
             Row(modifier = Modifier
                 // .background(Blue)
-                .fillMaxHeight(0.1f)
+                .weight(0.1f)
+                //.fillMaxHeight(0.1f)
                 .fillMaxWidth()) {
             Text( modifier=Modifier
                 //.background(Yellow)
@@ -467,12 +469,14 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                    Text(text="")
                }
 
-            }                   
+            }
+            //Second Row
             Row(modifier = Modifier
-                // .background(Yellow)
-                .fillMaxHeight()
+               //  .background(Yellow)
+                .weight(0.8f)
+                //.fillMaxHeight()
                 .fillMaxWidth()) {
-                Column(
+                Column( //first column
                     modifier = Modifier
                         .fillMaxHeight()
                         //.weight(0.1f)
@@ -510,10 +514,10 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                     //}
 
 
-                } //0.1f
+                } //end of first column
 
 
-
+                  //start second column
                     Box(
                         // interactionSource = remember { NoRippleInteractionSource() },
                         modifier = Modifier
@@ -624,9 +628,9 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                             }
                         }
                     }
-            //    }
-            //}
+
             //Box
+            //third column
                 Column(
                     modifier = Modifier
                         //  .background(Magenta)
@@ -638,13 +642,23 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                     //horizontalAlignment = Alignment.CenterHorizontally
                     // horizontalArrangement = Arrangement.Center
                 ) {
-                 ToggleMode(toggleState, quantityOfButtons)
+                 //ToggleMode(toggleState, quantityOfButtons)
 
                 }
 
-            }//0000
+            }// bottom Row
             //ToggleModeRow(toggleState , quantityOfButtons)
-
+            Row(modifier = Modifier
+                 //.background(White)
+                //.fillMaxHeight(0.1f)
+                .weight(0.09f)
+                .alpha(0.8f)
+                .fillMaxWidth(),
+                Arrangement.Center
+                ){
+                //Text(text = "Text")
+                ToggleModeRow(toggleState, quantityOfButtons, listUtilSongs, imageVisible)
+            }
 //========================================================
             /*
             LinearProgressIndicator(
@@ -658,9 +672,41 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
 
             )
          */
+            Row(modifier = Modifier
+                //.background(White)
+                //.fillMaxHeight(0.1f)
+                .weight(0.01f)
+                .fillMaxWidth()) {
+               // Text(text = "Text")
+              /*  Slider(
+                    value = (sliderPosition.longValue / 1000).toFloat(),
+                    modifier = Modifier.weight(0.1f),
+                    //onValueChange = { sliderPosition = it },
+                    onValueChange = { },
+                    thumb = {
+                        // val shape = RectangleShape
+                        Spacer(
+                            modifier = Modifier
+                                .size(2.dp)
 
-                SliderMusic(sliderPosition)
+                            //        .hoverable(interactionSource = interactionSource)
+                            //        .shadow(if (enabled) 6.dp else 0.dp, shape, clip = false)
+                            //        .background(Red, shape)
+                        )
+                    },
 
+                    colors = SliderDefaults.colors(
+                        thumbColor = MainActionColor,
+                        activeTrackColor = MainActionColor,
+                        inactiveTrackColor = White,
+                    ),
+                    // steps = 100,
+                    valueRange = 0f..9f
+
+                )
+            */
+           SliderMusic(sliderPosition)
+           }
 
 
         } //Column
@@ -690,7 +736,14 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                                 sliderPosition, player
                             )
 
-                         },
+                           // coroutineScope.launch {
+                           //     for (n in 1..1) {
+                           //         delay(1000)
+                           //     }
+                           //  listUtilSongs.clear()
+                           // }
+
+                        },
 
                 ) {
 
@@ -794,7 +847,7 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                        .fillMaxWidth(0.5f)
                        .fillMaxHeight(0.5f)
                        .clickable {
-                           if (!isButtonsEnabled) return@clickable
+                         //  if (!isButtonsEnabled) return@clickable
                            isButtonStartEnabled = true
                            isButtonsEnabled = false
                            sliderPosition.longValue=0
