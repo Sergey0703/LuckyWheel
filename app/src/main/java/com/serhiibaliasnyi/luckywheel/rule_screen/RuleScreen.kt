@@ -431,37 +431,45 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                 .fillMaxHeight(0.1f)
                 .fillMaxWidth()) {
             Text( modifier=Modifier
-               //  .background(Blue)
-                .fillMaxWidth(0.25f),
+                //.background(Yellow)
+                .weight(0.25f),
+              //  .fillMaxWidth(0.25f),
                 text = "Player 1",
                 textAlign = TextAlign.Left,
-                //fontFamily = FontFamily.Serif,
                 fontFamily = irishGroverFontFamily,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = White,
             )
               Row(modifier=Modifier
-                //  .background(White)
-                  .fillMaxWidth(0.68f),
+                 // .background(White)
+                  .weight(0.5f),
+                  //.fillMaxWidth(0.68f),
                  horizontalArrangement = Arrangement.Center
                   ){
                   for (x in 1..totalWinCount.value) {
                       Image(
                           painter = painterResource(id = R.drawable.crown),
-                          contentDescription = "coin",
+                          contentDescription = "small crowns",
                           modifier = Modifier
                               .padding(0.dp, 0.dp, 0.dp, 0.dp)
+                              //.fillMaxSize()
                               // .width(200.dp)
-                              .height(100.dp)
+                              .height(140.dp)
                               //  .weight(0.2f)
                               .alpha(1f)
                       )
                   }
               }
-            }
+               Row(modifier=Modifier
+                 //  .background(Red)
+                   .weight(0.25f),){
+                   Text(text="")
+               }
+
+            }                   
             Row(modifier = Modifier
-                //  .background(Blue)
+                // .background(Yellow)
                 .fillMaxHeight()
                 .fillMaxWidth()) {
                 Column(

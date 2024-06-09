@@ -11,8 +11,8 @@ android {
         applicationId = "com.serhiibaliasnyi.luckywheel"
         minSdk = 24
         targetSdk = 34
-        versionCode = 22
-        versionName = "22"
+        versionCode = 23
+        versionName = "23"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
