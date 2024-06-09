@@ -37,7 +37,7 @@ import com.serhiibaliasnyi.luckywheel.ui.theme.irishGroverFontFamily
 
 
 @Composable
-fun ToggleModeRow( toggleState:MutableState<Int>,quantityOfButtons:MutableState<Int>,listUtilSongs:MutableList<MainActivity.Music>, imageVisible: SnapshotStateList<Boolean>) {
+fun ToggleModeRow( toggleState:MutableState<Int>,quantityOfButtons:MutableState<Int>,listUtilSongs:MutableList<MainActivity.Music>, imageVisible: SnapshotStateList<Boolean>,  isButtonStartEnabled: Boolean) {
   // Row(modifier = Modifier
   //      .background(Blue).fillMaxHeight(0.1f)
   //     .fillMaxWidth()) {
@@ -53,7 +53,8 @@ fun ToggleModeRow( toggleState:MutableState<Int>,quantityOfButtons:MutableState<
            .clickable {
                toggleState.value = 2
                quantityOfButtons.value = 4
-               listUtilSongs.clear()
+               if(isButtonStartEnabled)  listUtilSongs.clear()
+
                for(x in 0 .. 3){
                    imageVisible.set(x, false)
                }
@@ -88,7 +89,7 @@ fun ToggleModeRow( toggleState:MutableState<Int>,quantityOfButtons:MutableState<
            .clickable {
                toggleState.value = 1
                quantityOfButtons.value = 3
-               listUtilSongs.clear()
+               if(isButtonStartEnabled)  listUtilSongs.clear()
                for(x in 0 .. 3){
                    imageVisible.set(x, false)
                }
@@ -122,7 +123,7 @@ fun ToggleModeRow( toggleState:MutableState<Int>,quantityOfButtons:MutableState<
            .clickable {
                toggleState.value = 0
                quantityOfButtons.value = 3
-               listUtilSongs.clear()
+               if(isButtonStartEnabled)  listUtilSongs.clear()
                for(x in 0 .. 3){
                    imageVisible.set(x, false)
                }

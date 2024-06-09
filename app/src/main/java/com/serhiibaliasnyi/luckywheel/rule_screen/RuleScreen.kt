@@ -36,9 +36,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
+//import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
+//import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -449,7 +451,18 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                   //.fillMaxWidth(0.68f),
                  horizontalArrangement = Arrangement.Center
                   ){
-                  for (x in 1..totalWinCount.value) {
+                  if(totalWinCount.value>0) {
+                      val formattedNumber = String.format("%02d", totalWinCount.value)
+                      Text(
+                          text = formattedNumber,
+                          fontFamily = irishGroverFontFamily,
+                          fontSize = 24.sp,
+                          fontWeight = FontWeight.Bold,
+                          color = White,
+                          //  style = MaterialTheme.typography.bodyLarge
+                      )
+                  }
+                  /* for (x in 1..totalWinCount.value) {
                       Image(
                           painter = painterResource(id = R.drawable.crown),
                           contentDescription = "small crowns",
@@ -461,7 +474,7 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                               //  .weight(0.2f)
                               .alpha(1f)
                       )
-                  }
+                  } */
               }
                Row(modifier=Modifier
                  //  .background(Red)
@@ -657,7 +670,7 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                 Arrangement.Center
                 ){
                 //Text(text = "Text")
-                ToggleModeRow(toggleState, quantityOfButtons, listUtilSongs, imageVisible)
+                ToggleModeRow(toggleState, quantityOfButtons, listUtilSongs, imageVisible, isButtonStartEnabled)
             }
 //========================================================
             /*
