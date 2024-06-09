@@ -2,6 +2,7 @@ package com.serhiibaliasnyi.luckywheel.rule_screen
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Blue
+import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -44,8 +46,10 @@ fun ToggleModeRow( toggleState:MutableState<Int>,quantityOfButtons:MutableState<
            .height(70.dp)
            //.size(70.dp)
            .clip(RoundedCornerShape(topStart = 30.dp, bottomStart = 30.dp))
+           .border(1.dp, Gray, shape = RoundedCornerShape(topStart = 30.dp, bottomStart = 30.dp))
            // .clip(CutCornerShape(bottomEnd = 30.dp))
            .background(Purple40)
+
            .clickable {
                toggleState.value = 2
                quantityOfButtons.value = 4
@@ -79,6 +83,7 @@ fun ToggleModeRow( toggleState:MutableState<Int>,quantityOfButtons:MutableState<
            //.size(70.dp)
            //.clip(RoundedCornerShape(topStart = 30.dp, topEnd=30.dp))
            // .clip(CutCornerShape(bottomEnd = 30.dp))
+           .border(1.dp, Gray)
            .background(Blue)
            .clickable {
                toggleState.value = 1
@@ -112,6 +117,7 @@ fun ToggleModeRow( toggleState:MutableState<Int>,quantityOfButtons:MutableState<
            .height(70.dp)
           // .clip(RoundedCornerShape(0.dp, 0.dp, 30.dp, 30.dp))
            .clip(RoundedCornerShape(topEnd = 30.dp, bottomEnd = 30.dp))
+           .border(1.dp, Gray, shape = RoundedCornerShape(topEnd = 30.dp, bottomEnd = 30.dp))
            .background(GreenMain)
            .clickable {
                toggleState.value = 0
