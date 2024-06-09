@@ -581,11 +581,11 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
 
                         Image(
                             //painter= painterResource(id = R.drawable.lucky_wheel_bg),
-                            painter = painterResource(id = R.drawable.external_rul8),
+                            painter = painterResource(id = R.drawable.external_rul11),
                             contentDescription = "lucky wheel",
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(5.dp)
+                                .padding(0.dp)
                             //  .rotate(angle)
                             //555  .alpha(alphaRulette)
                         )
