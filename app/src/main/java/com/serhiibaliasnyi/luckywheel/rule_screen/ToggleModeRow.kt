@@ -51,6 +51,7 @@ fun ToggleModeRow( toggleState:MutableState<Int>,quantityOfButtons:MutableState<
            .background(Purple40)
 
            .clickable {
+               if (toggleState.value ==2) return@clickable
                toggleState.value = 2
                quantityOfButtons.value = 4
                if(isButtonStartEnabled)  listUtilSongs.clear()
@@ -87,6 +88,7 @@ fun ToggleModeRow( toggleState:MutableState<Int>,quantityOfButtons:MutableState<
            .border(1.dp, Gray)
            .background(Blue)
            .clickable {
+               if (toggleState.value ==1) return@clickable
                toggleState.value = 1
                quantityOfButtons.value = 3
                if(isButtonStartEnabled)  listUtilSongs.clear()
@@ -121,6 +123,7 @@ fun ToggleModeRow( toggleState:MutableState<Int>,quantityOfButtons:MutableState<
            .border(1.dp, Gray, shape = RoundedCornerShape(topEnd = 30.dp, bottomEnd = 30.dp))
            .background(GreenMain)
            .clickable {
+               if (toggleState.value ==0) return@clickable
                toggleState.value = 0
                quantityOfButtons.value = 3
                if(isButtonStartEnabled)  listUtilSongs.clear()

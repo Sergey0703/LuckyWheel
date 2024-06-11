@@ -595,7 +595,7 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                             contentDescription = "arrow",
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(5.dp)
+                                .padding(10.dp)
                                 .rotate(angle)
                             //555    .alpha(alphaRulette)
                         )
@@ -607,7 +607,7 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                                 //tint=color,
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(5.dp)
+                                    .padding(10.dp)
                                 //  .alpha(alphaStartButton)
                                 //    .scale(heartbeatAnimation)
                                 //    .background(Color.Cyan.copy(flashAnimation))
@@ -861,7 +861,9 @@ fun RuleScreen(sound: SoundPool?, player: ExoPlayer, playList: List<MainActivity
                        .fillMaxHeight(0.5f)
                        .clickable {
                          //  if (!isButtonsEnabled) return@clickable
+                           if ( !isButtonsEnabled) return@clickable
                            isButtonStartEnabled = true
+
                            isButtonsEnabled = false
                            sliderPosition.longValue=0
                            choiceSong(
